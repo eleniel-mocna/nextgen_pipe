@@ -38,4 +38,4 @@ mv $out.1.bam $out.bam
 mv $out.1.bai $out.bai
 
 echo "calling variants in $out.bam"
-docker exec samtools_Samuel bash -c"samtools mpileup -f $NEXTGEN/hg19/hg19.fa -B $out.bam" > $out.pileup
+docker exec samtools_Samuel bash -c "samtools mpileup -f $reference -B $out.bam" > $out.pileup
