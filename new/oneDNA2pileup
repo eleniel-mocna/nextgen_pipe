@@ -1,0 +1,10 @@
+# This is a configuration file for the oneDNA2pileup pipeline
+# Name convention:
+# [tool].[function].[valueName]=[value]
+
+# reference
+reference="/reference/ucsc.hg19.fasta"
+
+#bwa.align
+bwa.align.outputFile="$samp/bwa.1.sam"
+bwa.align.header="@RG\tID:exomeID\tLB:exomeLB\tSM:$samp\tPL:illumina\tPU:exomePU"
