@@ -7,6 +7,7 @@ let "nsamp=narg"
 # NEXTGEN=/home/vidofnir/nextgen-bin/
 ord=""
 out=""
+# I don't know what was this supposed to do. But definitely not what it does...
 for (( c=0; c<$nsamp; c++ ))
 do
     let ind=c
@@ -19,6 +20,7 @@ do
 
 done
 
+# Why print the first element?
 echo $samples
 
 rm varfile.txt
