@@ -27,16 +27,19 @@ help () {
     echo 'USAGE:'
     echo './setupOneDNA2pileup.sh <mount directory> <reference directory> <max CPUs per docker> <max memory per docker>'
     echo '  <mount directory>: directory of your file system where you want the dockers to be mounted.'
+    # shellcheck disable=SC2016
     echo '  <reference directory>: directory with the `ucsc.hg19.fasta` reference file'
     echo '  <max CPUs per docker>: limit on the cpu usage of every docker (e.g. 12)'
+    # shellcheck disable=SC2016
     echo '      for more info see docker documentation on flag `--cpus`'
     echo '  <max memory per docker>: limit on the memory usage of every docker (e.g. 200g)'
+    # shellcheck disable=SC2016
     echo '      for more info see docker documentation on flag `-m`'
     echo
     exit 0
 }
 
-if [ $# -ne 3 ] || [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
+if [ $# -ne 4 ] || [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
 help
 fi
 
@@ -90,7 +93,7 @@ docker run --name samtools_oneDNA2pileup \
 # VarScan #
 ###########
 
-docker run --name varScan_Samuel \
+docker run --name varScan_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data varscan_samuel
