@@ -1,7 +1,16 @@
 #!/bin/bash
 # Input:
 #   - path to the config file
-#   - path to the sam file.
+#   - paths to the sam files.
+help(){
+    echo "mark_duplicates.sh: Marks duplicates using spark.">&2
+    echo "  INPUT:">&2
+    echo "    - Config file">&2
+    echo "    - For every sample: .sam file">&2
+    echo "  OUTPUT:">&2
+    echo "    - Config file">&2
+    echo "    - For every sample: marked_duplicates.sam file">&2
+}
 
 # shellcheck source=/dev/null
 source "new/input_reader.sh"

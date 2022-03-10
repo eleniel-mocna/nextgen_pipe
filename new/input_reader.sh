@@ -28,15 +28,17 @@ if [ $# -eq 0 ]; then # Everything in stdin
 
 elif [ $# -eq 1 ]; then # Config as CLA, input as stdin
     config_file="$1"
-    i=0
-    while read -r line
-    do    
+    if [ "$config_file" != "-h" ] && [ "$config_file" != "--help" ]; then
+        i=0
+        while read -r line
+        do    
 
-        if [ -n "$line" ]; then
-            inputs[i]="$line"
-        fi
-        (( i++ ))
-    done<"/dev/stdin"
+            if [ -n "$line" ]; then
+                inputs[i]="$line"
+            fi
+            (( i++ ))
+        done<"/dev/stdin"
+    fi
 
 else # Everything as CLA
     config_file="$1"
