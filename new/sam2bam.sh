@@ -14,7 +14,7 @@ for input_sam in "${inputs[@]}"; do
     out_folder="$(dirname "$(realpath "$input_sam")")"
     filename=$(basename -- "$input_sam")
     filename="${filename%.*}"
-    output_file="$out_folder/$filename.bam"
+    output_file="$out_folder/${i}_$filename.bam"
     docker exec samtools_oneDNA2pileup bash -c "samtools view -h -b $input_sam" > "$output_file"
     docker exec samtools_oneDNA2pileup bash -c "samtools index $output_file"
     echo "$output_file"    

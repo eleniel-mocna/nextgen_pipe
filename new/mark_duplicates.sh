@@ -17,11 +17,14 @@ source "new/input_reader.sh"
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
-
+log Started
 # shellcheck disable=SC2154 disable=SC1090
 for input_sam in "${inputs[@]}"; do
-    out_folder="$(dirname "$(realpath "$input_sam")")"
-    output_file="$out_folder/$markDuplicates_OUT_FILENAME"
-    docker exec gatk_oneDNA2pileup bash -c "gatk MarkDuplicatesSpark -I $input_sam -O $output_file"
+    realpath_input_sam=$(realpath "$input_sam")
+    out_folder="$(dirname "$(realpath "$realpath_input_sam")")"
+    output_file="$out_folder/${i}_$markDuplicates_OUT_FILENAME"
+    # docker exec gatk_oneDNA2pileup bash -c "java -jar /gatk/gatk.jar MarkDuplicatesSpark -I $realpath_input_sam -O $output_file --tmp-dir /ramdisk"
+    docker exec gatk_oneDNA2pileup bash -c "gatk MarkDuplicatesSpark -I $realpath_input_sam -O $output_file --tmp-dir /ramdisk"
     echo "$output_file"
+    log Ended
 done

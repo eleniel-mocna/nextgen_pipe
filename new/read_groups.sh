@@ -25,16 +25,19 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
-
+log "STARTED"
 # shellcheck disable=SC2154 disable=SC1090
 for input_sam in "${inputs[@]}"; do
+    realpath_input_sam=$(realpath "$input_sam")
     out_folder="$(dirname "$(realpath "$input_sam")")"
-    output_file="$out_folder/$readGroups_OUT_FILENAME"
+    output_file="$out_folder/${i}_$readGroups_OUT_FILENAME"
     
     docker exec gatk_oneDNA2pileup bash -c \
-        "gatk AddOrReplaceReadGroups -I $input_sam -O $output_file -ID Nazev1\
-        -LB nazev2 -PL illumina -PU HiSeq2000 -SM Nazev3\
-        --VALIDATION_STRINGENCY SILENT --TMP_DIR $out_folder"
+        "gatk AddOrReplaceReadGroups -I $realpath_input_sam -O $output_file -ID Nazev1 \
+        -LB nazev2 -PL illumina -PU HiSeq2000 -SM Nazev3 \
+        --VALIDATION_STRINGENCY SILENT --TMP_DIR $out_folder">/dev/null
+        # This /\ for some reason prints some of the debug lines to stdout...
     
     echo "$output_file"
+    log "ENDED"
 done

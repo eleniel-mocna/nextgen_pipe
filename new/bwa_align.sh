@@ -30,6 +30,8 @@ if [ "$config_file" = "-h" ] \
 fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
+echo  "$config_file"
+
 # shellcheck disable=SC2154 #$reference is loaded by the config file
 log "Using reference in: $reference"
     
@@ -39,7 +41,7 @@ for (( i=0; i<("$inputs_length")/2; i++ )); do
     log "allignement of paired-end $reads1 $reads2"
     name=$(get_sample_name "$reads1")
     # shellcheck disable=SC2154 #$bwa_OUT_FILENAME is loaded by the config file
-    output_file=$(dirname "$reads1")/"$bwa_OUT_FILENAME"
+    output_file="$(dirname "$reads1")/${i}_$bwa_OUT_FILENAME"
     
     # echo "docker exec bwa_oneDNA2pileup bash -c \
     #     bwa mem -t 12 -M -R $(bwa_readGroupHeader "$name") $reference $reads1 $reads2" > "$output_file"

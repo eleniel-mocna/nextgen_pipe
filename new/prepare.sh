@@ -23,7 +23,6 @@ source new/input_reader.sh
 
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
-
 # shellcheck disable=SC2154
 if [ $(( "$inputs_length"%3 )) -ne 0 ] || [ "$config_file" = "-h" ] \
     || [ "$config_file" = "--help" ]; then
@@ -34,8 +33,13 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
+# shellcheck disable=SC2154 
+if [ "$this_is_just_a_test" -eq 1 ]; then
+    echo "--test"
+fi
 echo "$config_file"
 log "Loaded config file: $config_file"
+# log "${inputs[0]}"
 for (( i=0; i<("$inputs_length")/3; i++ )); do
     name=$(realpath "${inputs[((2*$i))]}")
     reads1=$(realpath "${inputs[((2*$i+1))]}")
@@ -43,12 +47,21 @@ for (( i=0; i<("$inputs_length")/3; i++ )); do
     reads2=$(realpath "${inputs[((2*$i+2))]}")
     reads2_relative=$(realpath --relative-to="$name" "$reads2")
 
-    mkdir -p "$name"
     reads1_new="$name/$(basename -- "$reads1")"
     reads2_new="$name/$(basename -- "$reads2")"
-
-    ln -sf "$reads1_relative" "$reads1_new"
-    ln -sf "$reads2_relative" "$reads2_new"
+    # shellcheck disable=SC2154 
+    if [ "$this_is_just_a_test" -eq 0 ]; then
+        mkdir -p "$name"
+        ln -f "$reads1" "$reads1_new"
+        ln -f "$reads2" "$reads2_new"
+    else
+        mkdir -p "$name"
+        log "mkdir -p $name"
+        cat>>"$reads1_new"<<<"ln -sf $reads1_relative" 
+        log "ln -f $reads1_relative $reads1_new"
+        cat>>"$reads2_new"<<<"ln -sf $reads2_relative" 
+        log "ln -f $reads2_relative $reads2_new"
+    fi
     echo "$reads1_new"
     echo "$reads2_new"
 done

@@ -19,22 +19,26 @@ sortSam_OUT_FILENAME="sorted.bam"
 readGroups_OUT_FILENAME="read_groups.bam"
 
 pileup_OUT_FILENAME="pile.pileup"
+
+callVariants_OUT_FILENAME="variants.vcf"
+
+
+split_OUT_FILENAME="split_"
+split_OUT_EXTENSION=".bam"
 # get_filename(){    
 #     filename=$(basename -- "$1")
 #     filename="${filename%.*}"
 #     mkdir -p "$filename"
 #     echo "$filename"
 # }
+
 get_folder(){
     basename "$(dirname "$1")"
 }
+
 get_sample_name(){
     get_folder "$1"
 }
-
-# realpath() {
-#     echo "$(cd "$(dirname "$1")" || { log "realpath broke"; exit 99; }; pwd)/$(basename "$1")";
-# }
 
 log(){
     echo "[$0]: $1">&2

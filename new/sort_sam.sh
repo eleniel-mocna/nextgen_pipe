@@ -21,11 +21,13 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
-
+log "Sort sam started"
 # shellcheck disable=SC2154 disable=SC1090
 for input_sam in "${inputs[@]}"; do
+    realpath_input_sam=$(realpath "$input_sam")
     out_folder="$(dirname "$(realpath "$input_sam")")"
-    output_file="$out_folder/$sortSam_OUT_FILENAME"
-    docker exec gatk_oneDNA2pileup bash -c "gatk SortSamSpark -I $input_sam -O $output_file"
+    output_file="$out_folder/${i}_$sortSam_OUT_FILENAME"
+    docker exec gatk_oneDNA2pileup bash -c "gatk SortSamSpark -I $realpath_input_sam -O $output_file"
     echo "$output_file"
+    log "Sort sam Ended"
 done

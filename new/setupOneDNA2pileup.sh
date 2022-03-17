@@ -89,6 +89,15 @@ docker run --name samtools_oneDNA2pileup \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data biocontainers/samtools:v1.7.0_cv4
 
+############
+# BAMTOOLS #
+############
+
+docker run --name bamtools_oneDNA2pileup \
+    -d -it --cpus="$max_CPU" -m="$max_memory" \
+    -v "$reference_directory":/reference \
+    -v "$mount_directory":/data biocontainers/bamtools:v2.4.0_cv4
+
 ###########
 # VarScan #
 ###########

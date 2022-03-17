@@ -21,10 +21,10 @@ if [ $# -eq 0 ]; then # Everything in stdin
     done<"/dev/stdin"
 
     inputs_length="${#inputs[@]}"
-    if [ $(( "$inputs_length"%2 )) -ne 0 ]; then
-        echo "Invalid input type!" >&2
-        exit 1
-    fi
+    # if [ $(( "$inputs_length"%2 )) -ne 0 ]; then
+    #     echo "Invalid input type!" >&2
+    #     exit 1
+    # fi
 
 elif [ $# -eq 1 ]; then # Config as CLA, input as stdin
     config_file="$1"
@@ -50,4 +50,15 @@ else # Everything as CLA
         (( i++ ))
         
     done
+fi
+
+if [ "$config_file" = "--test" ]; then
+    this_is_just_a_test=1
+    config_file=${inputs[0]}
+    inputs=("${inputs[@]:1}")
+    echo "this_is_just_a_test: $this_is_just_a_test">&2
+    echo "config_file: $config_file">&2
+    echo "inputs: ${inputs[*]}">&2
+else
+    this_is_just_a_test=0
 fi
