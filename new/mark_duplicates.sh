@@ -24,7 +24,7 @@ for input_sam in "${inputs[@]}"; do
     out_folder="$(dirname "$(realpath "$realpath_input_sam")")"
     output_file="$out_folder/${i}_$markDuplicates_OUT_FILENAME"
     # docker exec gatk_oneDNA2pileup bash -c "java -jar /gatk/gatk.jar MarkDuplicatesSpark -I $realpath_input_sam -O $output_file --tmp-dir /ramdisk"
-    docker exec gatk_oneDNA2pileup bash -c "gatk MarkDuplicatesSpark -I $realpath_input_sam -O $output_file --tmp-dir /ramdisk"
+    docker exec gatk_oneDNA2pileup bash -c "gatk MarkDuplicatesSpark -I $realpath_input_sam -O $output_file"
     echo "$output_file"
-    log Ended
+    log 'Ended'
 done

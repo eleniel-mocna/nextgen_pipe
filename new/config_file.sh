@@ -3,6 +3,7 @@
 # /\ "variable not used" - this is a file for sourcing so this
 # warning makes no sence.
 
+
 reference="/reference/hg19.fa"
 out="out"
 bwa_threads=12
@@ -25,6 +26,8 @@ callVariants_OUT_FILENAME="variants.vcf"
 
 split_OUT_FILENAME="split_"
 split_OUT_EXTENSION=".bam"
+
+merge_vcf_OUT_FILENAME="merged.vcf"
 # get_filename(){    
 #     filename=$(basename -- "$1")
 #     filename="${filename%.*}"
@@ -43,4 +46,5 @@ get_sample_name(){
 log(){
     echo "[$0]: $1">&2
 }
+trap 'kill $(jobs -p)' EXIT
 # echo "Config loaded">&2

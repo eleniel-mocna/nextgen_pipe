@@ -2,6 +2,7 @@
 # Input:
 #   - path to the config file
 #   - path to the sam file.
+trap 'kill $(jobs -p)' EXIT
 
 help(){
     echo "read_groups.sh: Adds or replaces read groups using gatk.">&2
@@ -31,11 +32,11 @@ for input_sam in "${inputs[@]}"; do
     realpath_input_sam=$(realpath "$input_sam")
     out_folder="$(dirname "$(realpath "$input_sam")")"
     output_file="$out_folder/${i}_$readGroups_OUT_FILENAME"
-    
-    docker exec gatk_oneDNA2pileup bash -c \
-        "gatk AddOrReplaceReadGroups -I $realpath_input_sam -O $output_file -ID Nazev1 \
-        -LB nazev2 -PL illumina -PU HiSeq2000 -SM Nazev3 \
-        --VALIDATION_STRINGENCY SILENT --TMP_DIR $out_folder">/dev/null
+    echo "-I $realpath_input_sam -O $output_file"
+    # docker exec gatk_oneDNA2pileup bash -c \
+    #     "gatk AddOrReplaceReadGroups -I $realpath_input_sam -O $output_file -ID Nazev1 \
+    #     -LB nazev2 -PL illumina -PU HiSeq2000 -SM Nazev3 \
+    #     --VALIDATION_STRINGENCY SILENT --TMP_DIR $out_folder">/dev/null
         # This /\ for some reason prints some of the debug lines to stdout...
     
     echo "$output_file"

@@ -25,9 +25,11 @@ log "Started"
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("${#inputs[@]}"); i++ )); do
     {
-    realpath_input_bam=$(realpath "${inputs[i]}")
+    input_bam=${inputs[i]}
+    realpath_input_bam=$(realpath "$input_bam")
     out_folder="$(dirname "$(realpath "$input_bam")")"
     output_file="$out_folder/${i}_$pileup_OUT_FILENAME"
+    log "docker exec samtools_oneDNA2pileup bash -c samtools mpileup -f $reference -B $realpath_input_bam > $output_file"
     docker exec samtools_oneDNA2pileup bash -c "samtools mpileup -f $reference -B $realpath_input_bam" > "$output_file"
 
     # for i in $(samtools idxstats "$realpath_input_bam" | cut -f 1 | grep chr); do echo "zde -> $i"; done
