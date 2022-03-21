@@ -28,6 +28,14 @@ split_OUT_FILENAME="split_"
 split_OUT_EXTENSION=".bam"
 
 merge_vcf_OUT_FILENAME="merged.vcf"
+
+filter_vcf_OUT_FILENAME="filtered.vcf"
+
+create_varfile_OUT_FILENAME="varfile.txt"
+
+readcounts_OUT_FILENAME="readcounts.txt"
+
+merge_pileup_OUT_FILENAME="merged.pileup"
 # get_filename(){    
 #     filename=$(basename -- "$1")
 #     filename="${filename%.*}"
