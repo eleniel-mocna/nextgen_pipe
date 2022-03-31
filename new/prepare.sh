@@ -38,30 +38,33 @@ if [ "$this_is_just_a_test" -eq 1 ]; then
     echo "--test"
 fi
 echo "$config_file"
-log "Loaded config file: $config_file"
+log  "OUT: $config_file"
 # log "${inputs[0]}"
+
+# shellcheck disable=SC2154
+is_done=$(is_already_done "$0" "${inputs[@]}")
+
+# shellcheck disable=SC2154
 for (( i=0; i<("$inputs_length")/3; i++ )); do
     name=$(realpath "${inputs[((2*$i))]}")
     reads1=$(realpath "${inputs[((2*$i+1))]}")
-    reads1_relative=$(realpath --relative-to="$name" "$reads1")
     reads2=$(realpath "${inputs[((2*$i+2))]}")
-    reads2_relative=$(realpath --relative-to="$name" "$reads2")
 
     reads1_new="$name/$(basename -- "$reads1")"
     reads2_new="$name/$(basename -- "$reads2")"
     # shellcheck disable=SC2154 
-    if [ "$this_is_just_a_test" -eq 0 ]; then
+    if [ "$is_done" == false ]; then    
         mkdir -p "$name"
         ln -f "$reads1" "$reads1_new"
-        ln -f "$reads2" "$reads2_new"
-    else
-        mkdir -p "$name"
-        log "mkdir -p $name"
-        cat>>"$reads1_new"<<<"ln -sf $reads1_relative" 
-        log "ln -f $reads1_relative $reads1_new"
-        cat>>"$reads2_new"<<<"ln -sf $reads2_relative" 
-        log "ln -f $reads2_relative $reads2_new"
+        ln -f "$reads2" "$reads2_new"    
     fi
-    echo "$reads1_new"
+    echo "$reads1_new"    
+    log "$reads1_new"
     echo "$reads2_new"
+    log "$reads2_new"
 done
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi

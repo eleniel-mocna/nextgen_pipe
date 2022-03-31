@@ -32,6 +32,7 @@ merge(){
         fi
     done
     cat "${pileups[@]}">>"$output_file"
+    log "OUT: $output_file"
     echo "$output_file"
 }
 
@@ -54,17 +55,32 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
+log  "OUT: $config_file"
+
 # shellcheck disable=SC2154 disable=SC1090
+is_done=$(is_already_done "$0" "${inputs[@]}")
+
 declare -A folders
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     given_pileup=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     out_folder="$(dirname "$(realpath "$given_pileup")")"
     folders[$out_folder]+="$given_pileup;"
 done
-for files_in_folder in "${folders[@]}"
-do
-    merge "$files_in_folder"
-done
+if [ "$is_done" == false ]; then    
+    for files_in_folder in "${folders[@]}"
+    do
+        {
+            threads=$(get_threads 1)
+            merge "$files_in_folder"
+            give_back_threads "$threads"
+        }&
+    done
+fi
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi
 
 # This removes some warning lines which are for whatever reason
 # sometimes generated with the cat command.

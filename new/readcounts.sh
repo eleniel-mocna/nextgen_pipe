@@ -27,6 +27,9 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
+log  "OUT: $config_file"
+is_done=$(is_already_done "$0" "${inputs[@]}")
+
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     pileup=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
@@ -36,8 +39,20 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     output_file="$out_folder/$readcounts_OUT_FILENAME" 
     
     
-    docker exec varScan_Samuel bash -c "java -Xmx5g -jar VarScan.jar readcounts $pileup \
-    --min-coverage 0 --min-base-qual 15 --output-file  $output_file --variants-file $varfile"    
-
+    if [ "$is_done" == false ]; then    
+        {
+            threads=$(get_threads "$readcounts_THREADS")
+            docker exec varScan_Samuel bash -c "java -Xmx5g -jar VarScan.jar readcounts $pileup \
+                --min-coverage 0 --min-base-qual 15 --output-file  $output_file --variants-file $varfile"
+            give_back_threads "$threads"
+        }&
+            
+    fi
     echo "$output_file"
+    log "OUT: $output_file"
 done
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi

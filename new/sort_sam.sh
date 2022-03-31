@@ -21,13 +21,28 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
-log "Sort sam started"
+log  "OUT: $config_file"
+
+# shellcheck disable=SC2154
+is_done=$(is_already_done "$0" "${inputs[@]}")
+
 # shellcheck disable=SC2154 disable=SC1090
 for input_sam in "${inputs[@]}"; do
     realpath_input_sam=$(realpath "$input_sam")
     out_folder="$(dirname "$(realpath "$input_sam")")"
     output_file="$out_folder/${i}_$sortSam_OUT_FILENAME"
-    docker exec gatk_oneDNA2pileup bash -c "gatk SortSamSpark -I $realpath_input_sam -O $output_file"
+    if [ "$is_done" == false ]; then        
+        {
+            threads=$(get_threads "$sortSam_THREADS")
+            docker exec gatk_oneDNA2pileup bash -c "gatk SortSamSpark -I $realpath_input_sam -O $output_file"        
+            give_back_threads "$threads"
+        }&           
+    fi
     echo "$output_file"
-    log "Sort sam Ended"
+    log "OUT: $output_file"
 done
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi

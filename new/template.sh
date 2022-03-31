@@ -30,6 +30,10 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
+log  "OUT: $config_file"
+# shellcheck disable=SC2154 disable=SC1090
+is_done=$(is_already_done "$0" "${inputs[@]}")
+
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     argument1=$(realpath "${inputs[((N_ARGUMENTS*$i))]}") # TODO Pick how many arguments are used, rename variables
@@ -38,9 +42,19 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     out_folder="$(dirname "$(realpath "$argument1")")" # TODO: Is this right?
     output_file="$out_folder/$name_OUT_FILENAME" #TODO Change this, add to the config file
     # TODO: If more files are produced, put them here
-    
-    # TODO: Do your magic!
-
+    if [ "$is_done" == false ]; then            
+        {
+            threads=$(get_threads "$NAME_THREADS") # TODO: Rename this
+            : # TODO: Do your magic!
+            give_back_threads "$threads"
+        }&          
+    fi
     # TODO: Add the remaining output files!
     echo "$output_file"
+    log "OUT: $output_file"
 done
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi

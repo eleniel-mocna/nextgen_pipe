@@ -1,6 +1,7 @@
 #!/bin/bash
 help(){
     echo "create_varfile.sh: Appends variants to the varfile in given file's folder.">&2
+    echo "    This runs only on a single thread.">&2
     echo "  INPUT:">&2
     echo "    - Config file">&2
     echo "    - For each file:">&2
@@ -27,26 +28,61 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
+log  "OUT: $config_file"
 
-declare -a output_files
+# shellcheck disable=SC2154
+is_done=$(is_already_done "$0" "${inputs[@]}")
+
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     out_folder="$(dirname "$(realpath "$vcf")")"
-    output_file="$out_folder/$create_varfile_OUT_FILENAME" #TODO Change this, add to the config file
-    
-    skip=$(grep -n -m 1 '#CHR' "$vcf" | cut -d: -f1)
-    ((skip="$skip"+1))
+    output_file="$out_folder/$create_varfile_OUT_FILENAME"
+    if [ "$is_done" == false ]; then    
+        rm -f "$output_file"
+    fi
+done
 
-    # TODO: the original awk command was {print $1,$2,$4,$4} - I don't think that is right...
-    tail -n +$skip "$vcf" | awk  'BEGIN  {FS="\t";OFS = "\t";ORS="\n"}  {print $1,$2,$4,$4}'   >> "$output_file"
-    # TODO: Add the remaining output files!
+declare -a output_files
+for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
+    vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
+    out_folder="$(dirname "$(realpath "$vcf")")"
+    output_file="$out_folder/$create_varfile_OUT_FILENAME"
+    if [ "$is_done" == false ]; then    
+        skip=$(grep -n -m 1 '#CHR' "$vcf" | cut -d: -f1)
+        ((skip="$skip"+1))
+
+        # TODO: the original awk command was {print $1,$2,$4,$4} - I don't think that is right...
+        tail -n +$skip "$vcf" | awk  'BEGIN  {FS="\t";OFS = "\t";ORS="\n"}  {print $1,$2,$4,$4}'   >> "$output_file"    
+    fi
     output_files[i]=$output_file    
 done
 # printf "%s\n" "${output_files[@]}" | sort -u
+
 for varfile in "${output_files[@]}"; do
-    mv "$varfile" "${varfile}_tmp"
-    sort -u "${varfile}_tmp">"$varfile"
-    rm "${varfile}_tmp"
+    if [ "$is_done" == false ]; then  
+        mv "$varfile" "${varfile}_tmp"
+        sort -u "${varfile}_tmp">"$varfile"
+        rm "${varfile}_tmp"
+    fi
+    echo "$varfile"
+    log "OUT: $varfile"
 done
-while read -r x; do if [ -n "$x" ]; then echo "$x"; else echo "FAIL"; fi ;done < <(printf "%s\n" "${output_files[@]}" | sort -u)
+
+
+for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
+    vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
+    out_folder="$(dirname "$(realpath "$vcf")")"
+    output_file="$out_folder/$create_varfile_OUT_FILENAME"
+    # shellcheck disable=SC2154 
+    if [ "$is_done" == false ] && [ "$remove_after_done" == true ]; then                     
+        rm -f "$vcf"
+    fi
+    output_files[i]=$output_file    
+done
+
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi

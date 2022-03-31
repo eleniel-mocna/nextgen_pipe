@@ -116,8 +116,22 @@ docker run --name bcftools_oneDNA2pileup \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data biocontainers/bcftools:v1.9-1-deb_cv1
 
+##########
+# SnpEff #
+##########
+docker run --name SnpEff_oneDNA2pileup \
+    -d -it --cpus="$max_CPU" -m="$max_memory" \
+    -v "$reference_directory":/reference \
+    -v "$mount_directory":/data biocontainers/snpeff:v4.1k_cv3
+# docker run --name CellCNN_new_Samuel \
+# -d -it --cpus="$max_CPU" -m="$max_memory" \
+# -v "$mount_directory":/data cellcnn_samuel
+
 
 # max_CPU=20
 # max_memory="200g"
 # reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/"
 # mount_directory="/mnt/storage/clip/"
+
+# docker run -e PASSWORD=pass1234 -p 9021:8787 --name CellCNN_new_Samuel -d -it --cpus="$max_CPU" -m="$max_memory" -v "$mount_directory":/home/rstudio/data cellcnn_samuel
+

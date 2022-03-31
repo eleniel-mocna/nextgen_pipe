@@ -28,14 +28,17 @@ if [ "$config_file" = "-h" ] \
     help
     exit 1
 fi
-# shellcheck disable=SC2154 disable=SC1090
+
+# shellcheck source=/media/bioinfosrv/Samuel_workdir/nextgen_pipe/new/config_file.sh
 source "$config_file"
 echo  "$config_file"
-
+log  "OUT: $config_file"
+is_done=$(is_already_done "$0" "${inputs[@]}")
 # shellcheck disable=SC2154 #$reference is loaded by the config file
-log "Using reference in: $reference"
-    
+
+(( timeout="$inputs_length"*"$bwa_timeout_per_sample"/2 ))
 for (( i=0; i<("$inputs_length")/2; i++ )); do
+    threads=$(get_threads $bwa_threads $timeout)
     reads1=$(realpath "${inputs[((2*$i))]}")
     reads2=$(realpath "${inputs[((2*$i+1))]}")
     log "allignement of paired-end $reads1 $reads2"
@@ -45,8 +48,19 @@ for (( i=0; i<("$inputs_length")/2; i++ )); do
     
     # echo "docker exec bwa_oneDNA2pileup bash -c \
     #     bwa mem -t 12 -M -R $(bwa_readGroupHeader "$name") $reference $reads1 $reads2" > "$output_file"
-
-    docker exec bwa_oneDNA2pileup bash -c \
-        "bwa mem -t 12 -M -R $(bwa_readGroupHeader "$name") $reference $reads1 $reads2" > "$output_file"
+    if [ "$is_done" == false ]; then        
+        {
+        threads=$(get_threads $bwa_threads $timeout)
+        docker exec bwa_oneDNA2pileup bash -c \
+            "bwa mem -t $threads -M -R $(bwa_readGroupHeader "$name") $reference $reads1 $reads2" > "$output_file"
+        give_back_threads "$threads"
+        }&
+    fi
     echo "$output_file"
+    log  "OUT: $output_file"
 done
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi

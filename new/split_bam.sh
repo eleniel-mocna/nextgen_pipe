@@ -27,14 +27,31 @@ fi
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
 echo "$config_file"
+log  "OUT: $config_file"
+
+# shellcheck disable=SC2154
+is_done=$(is_already_done "$0" "${inputs[@]}")
+
 # shellcheck disable=SC2154 disable=SC1090
 for input_bam in "${inputs[@]}"; do
     realpath_input_bam=$(realpath "$input_bam")
     out_folder="$(dirname "$(realpath "$input_bam")")"
     for chr in $(docker exec samtools_oneDNA2pileup bash -c "samtools idxstats $realpath_input_bam" | cut -f 1 | head -n -1); do
         output_file="$out_folder/${split_OUT_FILENAME}${chr}$split_OUT_EXTENSION"
-        docker exec samtools_oneDNA2pileup bash -c "samtools view -h -b $realpath_input_bam $chr">"$output_file" &
+        if [ "$is_done" == false ]; then        
+            {
+            threads=$(get_threads 1)
+            docker exec samtools_oneDNA2pileup bash -c "samtools view -h -b $realpath_input_bam $chr">"$output_file" &
+            give_back_threads "$threads"
+            }&    
+        fi
         echo "$output_file"
+        log "OUT: $output_file"
     done
 done
 wait
+if [ "$is_done" == true ]; then
+        log "Skipped - already done."
+    else
+        mark_done "$0" "${inputs[@]}"
+fi

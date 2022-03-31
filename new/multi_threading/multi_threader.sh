@@ -15,18 +15,13 @@ _get_threads(){
     fi
     flock -u 200 )200>"$threads_file.lock"
 }
+
 give_back_threads(){
     ( flock 200
     available_threads="$(cat "$threads_file")"
     # echo "Available: $available_threads, updated to $(("$available_threads"+"$1"))"
-    cat>"$threads_file"<<<"$(("$available_threads"+"$1"))"
+    cat>"$threads_file"<<<"$(( "$available_threads"+"$1" ))"
     flock -u 200 )200>"$threads_file.lock"
-}
-
-do_something(){
-    echo "$1: This is doing something..."
-    sleep 1
-    echo "$1: This has done something!"
 }
 
 # This takes the number of threads as an argument and waits for 
@@ -34,18 +29,23 @@ do_something(){
 # It returns number of threads available for allocation
 # (which is min(requested threads, max available threads))
 get_threads(){
-    :
+    n_threads="$1"
+    if [ $# -ge 2 ]; then
+        timeout="$2"
+    else
+        timeout=10800 # If for 3 hours there is still not enough threads, try taking all available.
+    fi
+    current_time=0
+    while [ "$(_get_threads "$n_threads")" = 0 ]; do
+        sleep 1
+        (( current_time+=1 ))
+        if [ "$current_time" -ge "$timeout" ] && [ "$n_threads" -gt 1 ]; then
+            (( n_threads="$n_threads"-1 ))
+        fi
+    done
+    echo "$n_threads"
 }
-a=(1 2 3 4 5)
-for i in "${a[@]}"; do
-    {
-        while [ "$(_get_threads "$i")" = 0 ]; do
-            sleep 1
-        done
-        do_something "$i"
-        give_back_threads "$i"
-    }&
-done
-wait
-echo "Remaining threads:"
-cat "$threads_file"
+
+restore_threads(){
+    echo "$1">"$threads_file"
+}
