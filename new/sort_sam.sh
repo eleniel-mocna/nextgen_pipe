@@ -27,14 +27,14 @@ log  "OUT: $config_file"
 is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154 disable=SC1090
-for input_sam in "${inputs[@]}"; do
-    realpath_input_sam=$(realpath "$input_sam")
+for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
+    input_sam=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     out_folder="$(dirname "$(realpath "$input_sam")")"
     output_file="$out_folder/${i}_$sortSam_OUT_FILENAME"
     if [ "$is_done" == false ]; then        
         {
             threads=$(get_threads "$sortSam_THREADS")
-            docker exec gatk_oneDNA2pileup bash -c "gatk SortSamSpark -I $realpath_input_sam -O $output_file"        
+            docker exec gatk_oneDNA2pileup bash -c "gatk SortSamSpark -I $input_sam -O $output_file"        
             give_back_threads "$threads"
         }&           
     fi
@@ -46,3 +46,4 @@ if [ "$is_done" == true ]; then
     else
         mark_done "$0" "${inputs[@]}"
 fi
+wait

@@ -62,14 +62,14 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 
 declare -A folders
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
-    given_vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
+    given_vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")    
     out_folder="$(dirname "$(realpath "$given_vcf")")"
     folders[$out_folder]+="$given_vcf;"
 done
 if [ "$is_done" == false ]; then    
     for files_in_folder in "${folders[@]}"
     do
-        {
+        {          
             threads=$(get_threads 1)
             merge "$files_in_folder"
             give_back_threads "$threads"
@@ -80,12 +80,13 @@ fi
 # This removes some warning lines which are for whatever reason
 # sometimes generated with the cat command.
 # (Maybe todo)
-mv "$output_file" "${output_file}_tmp" 
-< "${output_file}_tmp" sed '/\[/d'>"$output_file"
-rm "${output_file}_tmp"
+# mv "$output_file" "${output_file}_tmp" 
+# < "${output_file}_tmp" sed '/\[/d'>"$output_file"
+# rm "${output_file}_tmp"
 
 if [ "$is_done" == true ]; then
         log "Skipped - already done."
     else
         mark_done "$0" "${inputs[@]}"
 fi
+wait

@@ -37,6 +37,9 @@ for (( i=0; i<("${#inputs[@]}"); i++ )); do
             {
                 threads=$(get_threads "$callVariants_THREADS")
                 docker exec varScan_Samuel bash -c "java -jar VarScan.jar mpileup2cns $realpath_input_pileup --p-value 1  --min-coverage 7 --min-reads2 2 --min-var-freq 0.05 --output-vcf 1 --strand-filter 0 --variants 1" > "$output_file"
+                mv "$output_file" "${output_file}_tmp"
+                < "${output_file}_tmp" sed '/\[/d'>"$output_file"
+                rm "${output_file}_tmp"
                 give_back_threads "$threads"
             }&
         fi

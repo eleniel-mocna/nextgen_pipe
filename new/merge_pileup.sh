@@ -81,6 +81,7 @@ if [ "$is_done" == true ]; then
     else
         mark_done "$0" "${inputs[@]}"
 fi
+wait
 
 # This removes some warning lines which are for whatever reason
 # sometimes generated with the cat command.

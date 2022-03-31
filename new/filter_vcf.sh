@@ -17,9 +17,6 @@ N_ARGUMENTS=1
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
 
-# shellcheck disable=SC2154
-is_done=$(is_already_done "$0" "${inputs[@]}")
-
 # shellcheck disable=SC2154 
 if [ $(( "$inputs_length"%"$N_ARGUMENTS" )) -ne 0 ] || [ "$config_file" = "-h" ] \
     || [ "$config_file" = "--help" ]; then
@@ -32,6 +29,9 @@ fi
 source "$config_file"
 echo "$config_file"
 log  "OUT: $config_file"
+
+# shellcheck disable=SC2154
+is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
@@ -54,3 +54,4 @@ if [ "$is_done" == true ]; then
     else
         mark_done "$0" "${inputs[@]}"
 fi
+wait

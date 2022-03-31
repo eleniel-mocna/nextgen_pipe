@@ -58,3 +58,4 @@ if [ "$is_done" == true ]; then
     else
         mark_done "$0" "${inputs[@]}"
 fi
+wait
