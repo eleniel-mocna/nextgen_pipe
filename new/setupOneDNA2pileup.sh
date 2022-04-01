@@ -127,6 +127,14 @@ docker run --name SnpEff_oneDNA2pileup \
 # -d -it --cpus="$max_CPU" -m="$max_memory" \
 # -v "$mount_directory":/data cellcnn_samuel
 
+################
+# STAR aligner #
+################
+
+docker run --name star_oneDNA2pileup \
+    -d -it --cpus="$max_CPU" -m="$max_memory" \
+    -v "$reference_directory":/reference \
+    -v "$mount_directory":/data star_samuel
 
 # max_CPU=20
 # max_memory="200g"

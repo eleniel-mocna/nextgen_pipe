@@ -9,6 +9,7 @@ remove_after_done=false
 
 reference="/reference/hg19.fa"
 out="out"
+
 bwa_threads=12
 bwa_timeout_per_sample=7200
 bwa_readGroupHeader(){
@@ -16,6 +17,10 @@ bwa_readGroupHeader(){
     echo "\"@RG\tID:exomeID\tLB:exomeLB\tSM:$1\tPL:illumina\tPU:exomePU\""
 }
 bwa_OUT_FILENAME="bwa_aligned.sam"
+
+star_align_OUT_FILENAME="star_aligned.sam"
+star_align_REFERENCE="/data/Samuel_workdir/starRNA/star_genome"
+star_THREADS=12
 
 markDuplicates_OUT_FILENAME="marked_duplicates.sam"
 

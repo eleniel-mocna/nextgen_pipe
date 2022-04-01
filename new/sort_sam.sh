@@ -9,8 +9,10 @@ help(){
     echo "    - For every sample: sorted.bam file">&2
 }
 # shellcheck source=/dev/null
-source "new/input_reader.sh"
-
+source new/input_reader.sh
+N_ARGUMENTS=1
+# shellcheck disable=SC2154
+inputs_length="${#inputs[@]}"
 # shellcheck disable=SC2154
 if [ "$config_file" = "-h" ] \
     || [ "$config_file" = "--help" ]; then
@@ -27,7 +29,7 @@ log  "OUT: $config_file"
 is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154 disable=SC1090
-for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
+for (( i=0; i<("$inputs_length"/"$N_ARGUMENTS"); i++ )); do
     input_sam=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     out_folder="$(dirname "$(realpath "$input_sam")")"
     output_file="$out_folder/${i}_$sortSam_OUT_FILENAME"

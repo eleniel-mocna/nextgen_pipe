@@ -31,6 +31,15 @@ log  "OUT: $config_file"
 
 # shellcheck disable=SC2154
 is_done=$(is_already_done "$0" "${inputs[@]}")
+for input_bam in "${inputs[@]}"; do
+    {
+        realpath_input_bam=$(realpath "$input_bam")
+        threads=$(get_threads 1)            
+        docker exec samtools_oneDNA2pileup bash -c "samtools index $realpath_input_bam"
+        give_back_threads "$threads"
+    }&   
+done
+wait
 
 # shellcheck disable=SC2154 disable=SC1090
 for input_bam in "${inputs[@]}"; do
@@ -40,7 +49,7 @@ for input_bam in "${inputs[@]}"; do
         output_file="$out_folder/${split_OUT_FILENAME}${chr}$split_OUT_EXTENSION"
         if [ "$is_done" == false ]; then        
             {
-            threads=$(get_threads 1)
+            threads=$(get_threads 1)            
             docker exec samtools_oneDNA2pileup bash -c "samtools view -h -b $realpath_input_bam $chr">"$output_file"
             give_back_threads "$threads"
             }&    
