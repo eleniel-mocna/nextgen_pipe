@@ -60,9 +60,12 @@ do
     # -----------
     
     echo "building called position vcf"
-    eval  "R CMD BATCH  --no-save --no-restore '--args rc_in=\"$file.var.readcounts.txt\" vcf_out=\"$file.rc.vcf\" pathRscript=\"$NEXTGEN/finish_rc_dev.R\"' $NEXTGEN/create.vcf.R diag.out"
+    eval  "R CMD BATCH  --no-save --no-restore '--args rc_in=\"$file.var.readcounts.txt\"\
+    vcf_out=\"$file.rc.vcf\" pathRscript=\"$NEXTGEN/finish_rc_dev.R\"' $NEXTGEN/create.vcf.R diag.out"
 
+    #snpsift.sh
     java -Xmx5g -jar "$NEXTGEN"/snpEff/SnpSift.jar annotate "$NEXTGEN"/snpEff/00-All.vcf "$file".rc.vcf > "$file".callannotated.vcf
+    #snpeff.sh
     java  -Xmx5g -jar "$NEXTGEN"/snpEff/snpEff.jar hg19 -v "$file".callannotated.vcf  > "$file".callannotated_eff.vcf
     outord[$c]=$file.callannotated_eff.vcf
     ((ind="$nsamp"+"$c"))

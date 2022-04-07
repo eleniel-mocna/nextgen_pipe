@@ -142,4 +142,3 @@ docker run --name star_oneDNA2pileup \
 # mount_directory="/mnt/storage/clip/"
 
 # docker run -e PASSWORD=pass1234 -p 9021:8787 --name CellCNN_new_Samuel -d -it --cpus="$max_CPU" -m="$max_memory" -v "$mount_directory":/home/rstudio/data cellcnn_samuel
-
