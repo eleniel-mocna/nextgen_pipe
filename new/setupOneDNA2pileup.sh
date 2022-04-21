@@ -60,7 +60,8 @@ docker run --name oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory"  \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data docker \
-    -v /var/run/docker.sock:/var/run/docker.sock
+    # -v //var/run/docker.sock:/var/run/docker.sock # WINDOWS
+    -v /var/run/docker.sock:/var/run/docker.sock # UNIX
 
 #############
 # ALIGNMENT #
@@ -136,8 +137,8 @@ docker run --name star_oneDNA2pileup \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data star_samuel
 
-# max_CPU=20
-# max_memory="200g"
+$max_CPU=20
+$max_memory="200g"
 # reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/"
 # mount_directory="/mnt/storage/clip/"
 
