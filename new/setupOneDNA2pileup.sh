@@ -136,6 +136,14 @@ docker run --name star_oneDNA2pileup \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data star_samuel
 
+################
+# ROCKER stuff #
+################
+
+docker run --name rocker_oneDNA2pileup \
+    -d -it --cpus="$max_CPU" -m="$max_memory" \
+    -v "$reference_directory":/reference \
+    -v "$mount_directory":/data rocker_1dna2p_samuel
 # max_CPU=20
 # max_memory="200g"
 # reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/"
