@@ -9,7 +9,7 @@ help(){
     echo "  OUTPUT:">&2
     echo "    - Config file">&2
     echo "    - For each file:">&2
-    echo "      - readcounts.pileup">&2
+    echo "      - readcounts.txt">&2
 }
 # shellcheck source=/dev/null
 source new/input_reader.sh

@@ -60,7 +60,8 @@ docker run --name oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory"  \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data docker \
-    -v /var/run/docker.sock:/var/run/docker.sock
+    -v /var/run/docker.sock:/var/run/docker.sock # UNIX
+    # -v //var/run/docker.sock:/var/run/docker.sock # WINDOWS
 
 #############
 # ALIGNMENT #
