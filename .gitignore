@@ -5,7 +5,13 @@
 /test.1.sam
 /test.bam
 /test.fixed1.sam
-
+CRISPR/
+CRISPR_original/
+2843*
+.vscode
+test/
+test_folder/
+smaller/
 *.sam
 *.bam
 *.bai
@@ -14,4 +20,10 @@
 *.fastq*
 *.fa
 *.vcf
-output
+*.jar
+
+*original_output*
+output/
+*log*
+starAligner/STAR-2.7.10a/
+starAligner/2.7.10a.tar.gz

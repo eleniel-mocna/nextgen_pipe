@@ -61,6 +61,8 @@ snpSift_THREADS=1
 
 sam2bam_THREADS=1
 
+call_positions_OUT_FILENAME="rc.vcf"
+call_positions_THREADS=1
 get_folder(){
     basename "$(dirname "$1")"
 }

@@ -1,5 +1,7 @@
 args=(commandArgs(TRUE))
-for(i in 1:length(args))  eval(parse(text=args[[i]],))
+require(VariantAnnotation)
+rc_in=args[1]
+vcf_out=args[2]
 
 read.rc<-function(file){
     serv<-scan(file,what="character",sep="\n",skip=1)
@@ -70,7 +72,6 @@ make.vcf<-function(file,sample="S1"){
                                     sampleNames=sample)
 }
 
-require(VariantAnnotation)
 vcf<-as(make.vcf(rc_in),"VCF")
 writeVcf(vcf,filename=vcf_out)  
 

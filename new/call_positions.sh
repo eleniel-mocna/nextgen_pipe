@@ -1,22 +1,18 @@
 #!/bin/bash
-help(){ # TODO
-    echo "NAME.sh: Short summary of this script's functionality.">&2
+help(){
+    echo "call_positions.sh: Get all variants on positions where variants have been called.">&2
     echo "  INPUT:">&2
     echo "    - Config file">&2
-    echo "    - Nths of:">&2
-    echo "      - first_file.ext">&2
-    echo "      - second_file.ext">&2
-    echo "      - ...">&2
+    echo "    - For each file:">&2
+    echo "      - readcounts.txt">&2
     echo "  OUTPUT:">&2
     echo "    - Config file">&2
-    echo "    - Nths of:">&2
-    echo "      - first_file.ext">&2
-    echo "      - second_file.ext">&2
-    echo "      - ...">&2
+    echo "    - For each file:">&2
+    echo "      - rc.vcf">&2
 }
 # shellcheck source=/dev/null
 source new/input_reader.sh
-N_ARGUMENTS=1 #TODO: Number of arguments per sample
+N_ARGUMENTS=1 
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
 # shellcheck disable=SC2154
@@ -36,20 +32,17 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
-    argument1=$(realpath "${inputs[((N_ARGUMENTS*$i))]}") # TODO Pick how many arguments are used, rename variables
-    # argument2=$(realpath "${inputs[((N_ARGUMENTS*$i+1))]}")
-    # argument3=$(realpath "${inputs[((N_ARGUMENTS*$i+2))]}")    
-    out_folder="$(dirname "$(realpath "$argument1")")" # TODO: Is this right?
-    output_file="$out_folder/$name_OUT_FILENAME" #TODO Change this, add to the config file
-    # TODO: If more files are produced, put them here
+    readcounts=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
+    out_folder="$(dirname "$(realpath "$readcounts")")" 
+    output_file="$out_folder/$call_positions_OUT_FILENAME" 
     if [ "$is_done" == false ]; then            
         {
-            threads=$(get_threads "$NAME_THREADS") # TODO: Rename this
-            : # TODO: Do your magic!
+            threads=$(get_threads "$call_positions_THREADS")
+            docker exec rocker_oneDNA2pileup bash -c "eval  \"Rscript  /RFiles/create.vcf.R $readcounts \
+                $output_file \"">/dev/null
             give_back_threads "$threads"
         }&          
     fi
-    # TODO: Add the remaining output files!
     echo "$output_file"
     log "OUT: $output_file"
 done

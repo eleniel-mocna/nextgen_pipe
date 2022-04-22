@@ -60,6 +60,7 @@ do
     # -----------
     
     echo "building called position vcf"
+    # call_positions.sh 
     eval  "R CMD BATCH  --no-save --no-restore '--args rc_in=\"$file.var.readcounts.txt\"\
     vcf_out=\"$file.rc.vcf\" pathRscript=\"$NEXTGEN/finish_rc_dev.R\"' $NEXTGEN/create.vcf.R diag.out"
 
