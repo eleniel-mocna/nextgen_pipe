@@ -15,7 +15,7 @@
     <"$sam_cache" new/read_groups.sh \
         | new/split_bam.sh \
         | new/pileup.sh > "$pileups_cache"
-    <"$pileups_cache" new/merge_pileup>"$merged_p_cache"
+    <"$pileups_cache" new/merge_pileup.sh>"$merged_p_cache"
     <"$pileups_cache" new/call_variants.sh \
         | new/merge_vcf.sh \
         | new/filter_vcf.sh>"$vcf_cache"
