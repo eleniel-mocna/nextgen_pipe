@@ -18,12 +18,13 @@
     <"$pileups_cache" new/merge_pileup.sh>"$merged_p_cache"
     <"$pileups_cache" new/call_variants.sh \
         | new/merge_vcf.sh \
-        | new/filter_vcf.sh>"$vcf_cache"
+        | new/filter_vcf.sh >"$vcf_cache"
     <"$vcf_cache" new/snpSift.sh\
         | new/snpEff.sh
     <"$vcf_cache" new/create_varfile.sh>"$varfile_cache"
     <"$fastqs_cache" new/star_align.sh
     new/merge_outputs.sh new/config_file.sh "$merged_p_cache" 1 "$varfile_cache" 1 | new/readcounts.sh | new/call_positions.sh
+    ew/mutect2.sh - test_folder/0_read_groups.bam
 }&>log220422
 
 # DONE    bwa_align.sh

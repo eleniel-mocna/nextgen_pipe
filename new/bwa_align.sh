@@ -18,7 +18,7 @@ help(){
 
 }
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"

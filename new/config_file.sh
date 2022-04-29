@@ -8,6 +8,7 @@ redo_all=true
 remove_after_done=false
 
 reference="/reference/hg19.fa"
+reference_vcf_header="/reference/hg19_header.vcf" # See reference_to_vcf_header.sh
 out="out"
 
 bwa_threads=12
@@ -43,6 +44,7 @@ split_OUT_EXTENSION=".bam"
 merge_vcf_OUT_FILENAME="merged.vcf"
 
 filter_vcf_OUT_FILENAME="filtered.vcf"
+filter_vcf_TMP_FILENAME="header.vcf"
 filter_vcf_THREADS=1
 
 create_varfile_OUT_FILENAME="varfile.txt"
@@ -60,6 +62,9 @@ snpSift_DATABASE="/data/Samuel_workdir/nextgen_pipe/new/00-All.vcf"
 snpSift_THREADS=1
 
 sam2bam_THREADS=1
+
+mutect2_OUT_FILENAME="mutect_variants.vcf"
+mutect2_THREADS=16
 
 call_positions_OUT_FILENAME="rc.vcf"
 call_positions_THREADS=1

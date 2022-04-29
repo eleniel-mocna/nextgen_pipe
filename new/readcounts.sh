@@ -12,7 +12,7 @@ help(){
     echo "      - readcounts.txt">&2
 }
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 N_ARGUMENTS=2
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
@@ -26,7 +26,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 is_done=$(is_already_done "$0" "${inputs[@]}")
 
@@ -42,8 +42,8 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     if [ "$is_done" == false ]; then    
         {
             threads=$(get_threads "$readcounts_THREADS")
-            docker exec varScan_Samuel bash -c "java -Xmx5g -jar VarScan.jar readcounts $pileup \
-                --min-coverage 0 --min-base-qual 15 --output-file  $output_file --variants-file $varfile"
+            docker exec varScan_oneDNA2pileup    bash -c "java -Xmx5g -jar VarScan.jar readcounts $pileup \
+                --min-coverage 0 --min-base-qual 0 --output-file  $output_file --variants-file $varfile"
             give_back_threads "$threads"
         }&
             

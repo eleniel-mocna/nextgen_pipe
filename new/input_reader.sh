@@ -5,6 +5,8 @@
 
 # This script reads from stdin and command line arguments (CLA)
 
+default_config_file="/data/Samuel_workdir/nextgen_pipe/new/config_file.sh"
+
 if [ $# -eq 0 ]; then # Everything in stdin
     i=-1
     while read -r line
@@ -61,4 +63,7 @@ if [ "$config_file" = "--test" ]; then
     echo "inputs: ${inputs[*]}">&2
 else
     this_is_just_a_test=0
+fi
+if [ "$config_file" = "-" ]; then
+    config_file="$default_config_file"
 fi

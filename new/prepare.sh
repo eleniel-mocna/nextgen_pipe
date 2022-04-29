@@ -19,7 +19,7 @@ help(){
     echo "      - sample_fastq2.fq:">&2
 }
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
@@ -37,9 +37,11 @@ source "$config_file"
 if [ "$this_is_just_a_test" -eq 1 ]; then
     echo "--test"
 fi
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 # log "${inputs[0]}"
+
+restore_threads 50
 
 # shellcheck disable=SC2154
 is_done=$(is_already_done "$0" "${inputs[@]}")

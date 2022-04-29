@@ -20,18 +20,21 @@ merge(){
     # Split given string by ;
     for input_pileup in $(echo "$1" | tr ";" "\n")
     do
-        if [ -z "$first" ]; then       
-            first='false'
+        # if [ -z "$first" ]; then       
+        #     first='false'
+        #     out_folder="$(dirname "$(realpath "$input_pileup")")"
+        #     # shellcheck disable=SC2154 # From config file
+        #     output_file="$out_folder/$merge_pileup_OUT_FILENAME"
+        #     cp "$input_pileup" "$output_file"  
+        # else
             out_folder="$(dirname "$(realpath "$input_pileup")")"
-            # shellcheck disable=SC2154 # From config file
             output_file="$out_folder/$merge_pileup_OUT_FILENAME"
-            cp "$input_pileup" "$output_file"  
-        else
             ((i+=1))
             pileups[i]="$input_pileup"   
-        fi
+        # fi
     done
-    cat "${pileups[@]}">>"$output_file"
+    # echo "${pileups[@]}"
+    cat "${pileups[@]}">"$output_file"
     log "OUT: $output_file"
     echo "$output_file"
 }
@@ -40,7 +43,7 @@ merge(){
 # and then merges them folderwise
 
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 N_ARGUMENTS=1
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
@@ -54,7 +57,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 
 # shellcheck disable=SC2154 disable=SC1090

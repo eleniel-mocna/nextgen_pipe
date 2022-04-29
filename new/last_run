@@ -1,0 +1,38 @@
+
+#new/split_bam.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/pileup.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/call_variants.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/merge_vcf.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/create_varfile.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/readcounts.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/snpSift.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/snpEff.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/filter_vcf.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/prepare.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/bwa_align.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/mark_duplicates.sh# started... /data/Samuel_workdir/nextgen_pipe/test_folder/0_bwa_aligned.sam
+
+#new/sort_sam.sh# started... 
+
+#new/read_groups.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/star_align.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/merge_pileup.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/call_positions.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/sam2bam.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#new/mutect2.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run

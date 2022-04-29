@@ -26,7 +26,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 
 # shellcheck disable=SC2154

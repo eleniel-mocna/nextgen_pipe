@@ -12,7 +12,7 @@ help(){
     echo "      - star_aligned.sam">&2
 }
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 N_ARGUMENTS=2
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
@@ -26,7 +26,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 # shellcheck disable=SC2154 disable=SC1090
 is_done=$(is_already_done "$0" "${inputs[@]}")
@@ -41,8 +41,10 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         {            
             threads=$(get_threads "$star_THREADS")
             tmp_dir=$(docker exec star_oneDNA2pileup bash -c "mktemp -d star.XXXXXXXXX")
+            
+            #TODO: zcat is for fq.gz files - for unzipped files this might cause havoc?
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --genomeDir\
-                $star_align_REFERENCE --readFilesIn $fastq1 $fastq2"
+                $star_align_REFERENCE  --genomeLoad LoadAndKeep --readFilesCommand zcat --readFilesIn $fastq1 $fastq2" 
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && mkdir 2ndpass"
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --runMode genomeGenerate \
                 --genomeDir 2ndpass/ --genomeFastaFiles $reference --sjdbFileChrStartEnd SJ.out.tab \

@@ -40,7 +40,7 @@ merge(){
 # and then merges them folderwise
 
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 N_ARGUMENTS=1
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
@@ -54,7 +54,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 
 # shellcheck disable=SC2154 disable=SC1090

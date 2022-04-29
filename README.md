@@ -68,10 +68,10 @@ and then paths/arguments for files for processing. Input can be given in these
 
 ### Creating a new script
 
+The easiest way to create a new script is by following instructions in new/template.sh.
+Edit the script according to the `#TODO` tags.
+
 ## TODO
 
-- Add an absolute path to input_reader.sh
-- `-` as a config file means the default config file is to be used
-- Add default configuration file
 - main docker needs: bash
 - main docker needs: apk add coreutils

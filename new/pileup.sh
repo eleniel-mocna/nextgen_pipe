@@ -9,7 +9,7 @@ help(){
     echo "    - For every sample: pile.pileup file">&2
 }
 # shellcheck source=/dev/null
-source "new/input_reader.sh"
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 
 # shellcheck disable=SC2154
 if [ "$config_file" = "-h" ] \
@@ -20,7 +20,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 
 # shellcheck disable=SC2154 
@@ -28,7 +28,6 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154 
 for (( i=0; i<("${#inputs[@]}"); i++ )); do
-    {
     input_bam=${inputs[i]}
     realpath_input_bam=$(realpath "$input_bam")
     out_folder="$(dirname "$(realpath "$input_bam")")"
@@ -37,13 +36,13 @@ for (( i=0; i<("${#inputs[@]}"); i++ )); do
         {
             threads=$(get_threads "$pileup_THREADS")
             docker exec samtools_oneDNA2pileup bash -c "samtools mpileup -f $reference -B $realpath_input_bam" > "$output_file"
+            sed -i -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$output_file" # This removes all but one newline at the end of the pileup.
             give_back_threads "$threads"
         }&
     fi
     # for i in $(samtools idxstats "$realpath_input_bam" | cut -f 1 | grep chr); do echo "zde -> $i"; done
     echo "$output_file"
     log "OUT: $output_file"
-    }&
 done
 wait
 if [ "$is_done" == true ]; then

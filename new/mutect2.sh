@@ -1,18 +1,16 @@
 #!/bin/bash
-help(){ #
-    echo "snpSift.sh: Sift a vcf file.">&2
+help(){ 
+    echo "mutect2.sh: variant calling from gatk.">&2
     echo "  INPUT:">&2
     echo "    - Config file">&2
-    echo "    - For each sample:">&2
-    echo "      - file.vcf">&2
+    echo "    - For every sample: .bam/cram file">&2
     echo "  OUTPUT:">&2
     echo "    - Config file">&2
-    echo "    - For each file:">&2
-    echo "      - annotated.vcf">&2
+    echo "    - For every sample: mutect_variants.vcf file">&2
 }
 # shellcheck source=/dev/null
 source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
-N_ARGUMENTS=1
+N_ARGUMENTS=1 
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
 # shellcheck disable=SC2154
@@ -32,18 +30,19 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
-    vcf_in=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
-    out_folder="$(dirname "$(realpath "$vcf_in")")"
-    output_file="$out_folder/$snpSift_OUT_FILENAME" 
-    if [ "$is_done" == false ]; then           
+    input_bam=$(realpath "${inputs[((N_ARGUMENTS*$i))]}") #
+    out_folder="$(dirname "$(realpath "$input_bam")")"
+    output_file="$out_folder/$mutect2_OUT_FILENAME"
+    # TODO: If more files are produced, put them here
+    if [ "$is_done" == false ]; then            
         {
-            threads=$(get_threads "$snpSift_THREADS")
-            docker exec SnpEff_oneDNA2pileup bash -c \
-                "java  -Xmx5g -jar /home/biodocker/bin/snpEff/SnpSift.jar annotate\
-                $snpSift_DATABASE $vcf_in" > "$output_file"
+            threads=$(get_threads "$mutect2_THREADS") # TODO: Rename this
+            docker exec samtools_oneDNA2pileup bash -c "samtools index $input_bam"
+            docker exec gatk_oneDNA2pileup bash -c "gatk Mutect2 -I $input_bam -O $output_file -R $reference"
             give_back_threads "$threads"
-        }&
+        }&          
     fi
+    # TODO: Add the remaining output files!
     echo "$output_file"
     log "OUT: $output_file"
 done

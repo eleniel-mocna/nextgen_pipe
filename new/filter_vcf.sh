@@ -1,4 +1,4 @@
-#!/bin/bash
+    #!/bin/bash
 help(){
     echo "filter_vcf.sh: Filter vcf by bcftools.">&2
     echo "  INPUT:">&2
@@ -12,7 +12,7 @@ help(){
     echo "      - filtered.vcf">&2
 }
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 N_ARGUMENTS=1
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
@@ -27,7 +27,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 
 # shellcheck disable=SC2154
@@ -38,10 +38,17 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     out_folder="$(dirname "$(realpath "$vcf")")" # TODO: Is this right?
     output_file="$out_folder/${i}_$filter_vcf_OUT_FILENAME" #TODO Change this, add to the config file
+    header="$out_folder/${i}_$filter_vcf_TMP_FILENAME"
+
     if [ "$is_done" == false ]; then    
-        {
+        {                        
             threads=$(get_threads "$filter_vcf_THREADS")
-            docker exec bcftools_oneDNA2pileup bash -c "bcftools filter -e \"(AD/(AD+RD))<0.15\" $vcf" > "$output_file"
+            cat \
+                <(docker exec bcftools_oneDNA2pileup bash -c "bcftools view -h $vcf" | grep '^##') \
+                <(docker exec bcftools_oneDNA2pileup bash -c "cat $reference_vcf_header") \
+                <(docker exec bcftools_oneDNA2pileup bash -c "bcftools view -h $vcf" | grep -v '^##') \
+                > "$header"
+            docker exec bcftools_oneDNA2pileup bash -c "bcftools reheader --header $header $vcf | bcftools filter -e \"(AD/(AD+RD))<0.15\"" > "$output_file"
             give_back_threads "$threads"
         }&
     fi

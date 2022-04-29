@@ -14,7 +14,7 @@ help(){
     echo "    - For every sample: read_groups.bam file">&2
 }
 # shellcheck source=/dev/null
-source "new/input_reader.sh"
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 
 # shellcheck disable=SC2154
 if [ "$config_file" = "-h" ] \
@@ -25,7 +25,7 @@ fi
 
 # shellcheck source=/media/bioinfosrv/Samuel_workdir/nextgen_pipe/new/config_file.sh
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 
 # shellcheck disable=SC2154 disable=SC1090

@@ -1,5 +1,5 @@
 #!/bin/bash
-help(){ # TODO
+help(){ # TODO Rewrite these help prints.
     echo "NAME.sh: Short summary of this script's functionality.">&2
     echo "  INPUT:">&2
     echo "    - Config file">&2
@@ -15,7 +15,7 @@ help(){ # TODO
     echo "      - ...">&2
 }
 # shellcheck source=/dev/null
-source new/input_reader.sh
+source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 N_ARGUMENTS=1 #TODO: Number of arguments per sample
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
@@ -29,7 +29,7 @@ fi
 
 # shellcheck disable=SC2154 disable=SC1090
 source "$config_file"
-echo "$config_file"
+realpath "$config_file"
 log  "OUT: $config_file"
 # shellcheck disable=SC2154 disable=SC1090
 is_done=$(is_already_done "$0" "${inputs[@]}")
