@@ -32,7 +32,7 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     input_bam=$(realpath "${inputs[((N_ARGUMENTS*$i))]}") #
     out_folder="$(dirname "$(realpath "$input_bam")")"
-    output_file="$out_folder/$mutect2_OUT_FILENAME"
+    output_file="$out_folder/${i}_$mutect2_OUT_FILENAME"
     # TODO: If more files are produced, put them here
     if [ "$is_done" == false ]; then            
         {

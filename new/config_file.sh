@@ -20,7 +20,7 @@ bwa_readGroupHeader(){
 bwa_OUT_FILENAME="bwa_aligned.sam"
 
 star_align_OUT_FILENAME="star_aligned.sam"
-star_align_REFERENCE="/data/Samuel_workdir/starRNA/star_genome"
+star_align_REFERENCE="/data/Samuel_workdir/starRNA/star_genome" #TODO
 star_THREADS=12
 
 markDuplicates_OUT_FILENAME="marked_duplicates.sam"
@@ -58,7 +58,7 @@ snpEff_OUT_FILENAME="annotated.vcf"
 snpEff_THREADS=1
 
 snpSift_OUT_FILENAME="sifted.vcf"
-snpSift_DATABASE="/data/Samuel_workdir/nextgen_pipe/new/00-All.vcf"
+snpSift_DATABASE="/scripts/00-All.vcf"
 snpSift_THREADS=1
 
 sam2bam_THREADS=1
@@ -84,7 +84,7 @@ trap 'kill $(jobs -p)' EXIT
 
 rerun_pipe=0
 
-last_run_file="/data/Samuel_workdir/nextgen_pipe/new/last_run"
+last_run_file="/scripts/last_run"
 
 is_already_done(){
     tool_name="$1"
@@ -114,6 +114,6 @@ mark_done(){
     sed -i "s~$last_line~$new_line~" "$last_run_file"
 }
 
-multi_threader="/data/Samuel_workdir/nextgen_pipe/new/multi_threading/multi_threader.sh"
+multi_threader="/scripts/multi_threading/multi_threader.sh"
 # shellcheck source=/media/bioinfosrv/Samuel_workdir/nextgen_pipe/new/multi_threading/multi_threader.sh
 source "$multi_threader"

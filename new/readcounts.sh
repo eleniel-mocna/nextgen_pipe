@@ -43,7 +43,7 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         {
             threads=$(get_threads "$readcounts_THREADS")
             docker exec varScan_oneDNA2pileup    bash -c "java -Xmx5g -jar VarScan.jar readcounts $pileup \
-                --min-coverage 0 --min-base-qual 0 --output-file  $output_file --variants-file $varfile"
+                --min-coverage 0 --min-base-qual 0 --output-file  $output_file --variants-file $varfile">/dev/null
             give_back_threads "$threads"
         }&
             

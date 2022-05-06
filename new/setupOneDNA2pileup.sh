@@ -51,16 +51,18 @@ mount_directory="$1"
 reference_directory="$2"
 max_CPU="$3"
 max_memory="$4"
+password="$5"
+port="$6"
 
 ########
 # MAIN #
 ########
-
-docker run --name oneDNA2pileup \
+docker run --name NGSMainSamuel \
     -d -it --cpus="$max_CPU" -m="$max_memory"  \
     -v "$reference_directory":/reference \
-    -v "$mount_directory":/data docker \
-    -v /var/run/docker.sock:/var/run/docker.sock # UNIX
+    -v "$mount_directory":/data \
+    -e PASSWORD="$password" -p "$port":8787 \
+    -v /var/run/docker.sock:/var/run/docker.sock ngs_main_samuel # UNIX
     # -v //var/run/docker.sock:/var/run/docker.sock # WINDOWS
 
 #############
@@ -70,7 +72,7 @@ docker run --name oneDNA2pileup \
 docker run --name bwa_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
     -v "$reference_directory":/reference \
-    -v "$mount_directory":/data biocontainers/bwa:v0.7.17_cv1
+    -v "$mount_directory":/data biocontainers/bwa:v0.7.17_cv1    
 
 ########
 # GATK #
@@ -158,5 +160,5 @@ docker run --name python_oneDNA2pileup \
 # max_memory="200g"
 # reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/"
 # mount_directory="/mnt/storage/clip/"
-
-# docker run -e PASSWORD=pass1234 -p 9021:8787 --name CellCNN_new_Samuel -d -it --cpus="$max_CPU" -m="$max_memory" -v "$mount_directory":/home/rstudio/data cellcnn_samuel
+# password=pass1234
+# port=9009

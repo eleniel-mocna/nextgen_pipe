@@ -24,7 +24,8 @@
     <"$vcf_cache" new/create_varfile.sh>"$varfile_cache"
     <"$fastqs_cache" new/star_align.sh
     new/merge_outputs.sh new/config_file.sh "$merged_p_cache" 1 "$varfile_cache" 1 | new/readcounts.sh | new/call_positions.sh
-    ew/mutect2.sh - test_folder/0_read_groups.bam
+    <"$sam_cache" new/read_groups.sh \
+        | new/split_bam.sh| new/mutect2.sh
 }&>log220422
 
 # DONE    bwa_align.sh

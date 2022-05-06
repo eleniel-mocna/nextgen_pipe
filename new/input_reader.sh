@@ -5,7 +5,7 @@
 
 # This script reads from stdin and command line arguments (CLA)
 
-default_config_file="/data/Samuel_workdir/nextgen_pipe/new/config_file.sh"
+default_config_file="/scripts/config_file.sh"
 
 if [ $# -eq 0 ]; then # Everything in stdin
     i=-1
