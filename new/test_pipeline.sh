@@ -5,15 +5,17 @@
     merged_p_cache="test_folder/cached_m_pileup"
     vcf_cache="test_folder/cached_vcf"
     sam_cache="test_folder/cached_sam"
+    bam_cache="test_folder/cached_bam"
     varfile_cache="test_folder/cached_varfile"
     fastqs_cache="test_folder/cached_fastqs"
+    rc_cache="test_folder/cached_rc"
     new/prepare.sh new/config_file.sh test_folder data/CRISPR-DNA_S2_merged_R1.fastq.gz data/CRISPR-DNA_S2_merged_R2.fastq.gz>"$fastqs_cache"
     <"$fastqs_cache" new/bwa_align.sh \
         | new/mark_duplicates.sh\
         | new/sort_sam.sh>"$sam_cache"
     <"$sam_cache" new/sam2bam.sh
-    <"$sam_cache" new/read_groups.sh \
-        | new/split_bam.sh \
+    <"$sam_cache" new/read_groups.sh >"$bam_cache"
+    <"$bam_cache" new/split_bam.sh \
         | new/pileup.sh > "$pileups_cache"
     <"$pileups_cache" new/merge_pileup.sh>"$merged_p_cache"
     <"$pileups_cache" new/call_variants.sh \
@@ -23,7 +25,8 @@
         | new/snpEff.sh
     <"$vcf_cache" new/create_varfile.sh>"$varfile_cache"
     <"$fastqs_cache" new/star_align.sh
-    new/merge_outputs.sh new/config_file.sh "$merged_p_cache" 1 "$varfile_cache" 1 | new/readcounts.sh | new/call_positions.sh
+    new/merge_outputs.sh new/config_file.sh "$merged_p_cache" 1 "$varfile_cache" 1 | new/readcounts.sh | new/call_positions.sh>"$rc_cache"
+    new/merge_outputs.sh new/config_file.sh "$bam_cache" 1 "$rc_cache" 1 | new/merge_vcf_w_coverage.sh
     <"$sam_cache" new/read_groups.sh \
         | new/split_bam.sh| new/mutect2.sh
 }&>log220422

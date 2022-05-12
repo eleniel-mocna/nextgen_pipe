@@ -95,47 +95,41 @@ order = ["chr1",
     "chrUn_gl000226",
     "chr18_gl000207_random"]
 
-def get_panda(file_path):
-    HEADER = ["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT", file_path]
-    return pd.read_table(file_path, sep="\t",comment="#", header=None, names=HEADER)
+def add_depths(vcf_path, depths_path):
+    """Add depths to a merged multisample vcf
 
-def merge_vcfs(file_paths, output_file, output_bedfile):
-    """Merge INFO-less vcf files.
+    Caveat:
+        The vcf must not have a # at the beggining of the CHROM ... line
 
     Args:
-        file_paths (list(paths)): All the input files
-        output_file (path): The output vcf
+        vcf_path (string/path): path to the vcf file
+        depths_path (string/path): path to the corresponding depths file
     """
-    frames = [get_panda(path) for path in file_paths]
-    NA_STRING=("NA:"*len(frames[0]["FORMAT"][0].split(":")))[:-1]
-    header = []
-    for file_path in file_paths:
-            with open(file_path, "r") as file:
-                for line in file:
-                    if line[0]=="#" and not line in header and line[:34]!="#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\t":
-                        header.append(line)
-    
-    result = frames.pop(0)
-    # header.append("#")
-    while len(frames)>0:
-        name = frames[0].columns[-1]
-        result=pd.merge(result,frames.pop(0)[["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT", name]], on=["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"], how="outer", suffixes=(None, "???"))
-    
-    # Here we sort first by chromosome('s actual location) then by position.
-    result=pd.concat((result,(result["CHROM"].map(lambda x: order.index(x) if x in order else hash(x))).rename("CHROM_ORDER")), axis=1)
-    result.sort_values(["CHROM_ORDER", "POS"], inplace=True)
-    result.drop("CHROM_ORDER", axis=1, inplace=True)
+    vcf = pd.read_table(vcf_path, sep="\t",comment="#")
+    nsamples = vcf.shape[1]-9
+    depths= pd.read_table(depths_path, sep="\t", names=["CHROM","POS"]+[str(i) for i in range(nsamples)])
+    vcf=pd.merge(vcf, depths, on=["CHROM", "POS"], how="left")
+    vcf["FORMAT"]+=":QD"
+    for i in range(nsamples):
+        vcf.iloc[:,9+i]+=":"+vcf.iloc[:,9+nsamples+i].astype(str)
 
-    with open(output_file, "w") as file:
+    header = []
+    with open(vcf_path, "r") as file:
+        for line in file:
+            if line[0]=="#":
+                header.append(line)         
+            else:
+                break
+        
+    header.append("#")
+    vcf=vcf.iloc[:,:-nsamples]
+
+    with open(vcf_path, "w") as file:
         file.writelines(header)
-        result.to_csv(file, sep="\t", index = None, na_rep=NA_STRING)
-    bed=pd.concat([result["CHROM"], result["POS"]-1, result["POS"]], axis=1)
-    with open(output_bedfile, "w") as file:
-        bed.to_csv(file, sep="\t", index = None, header=None)
+        vcf.to_csv(file, sep="\t", index = None)
 
 if __name__=="__main__":
-    if len(sys.argv)>3:
-        # THIS VCF DOESN'T HAVE A # IN FRONT OF THE CHROM ... LINE!!!
-        merge_vcfs(sys.argv[1:-2], sys.argv[-2], sys.argv[-1])
+    if len(sys.argv)==3:
+        add_depths(sys.argv[1], sys.argv[2])
     else:
-        print("USAGE: [vcf1] [vcf2] ... [output_vcf] [output_bed]", file=sys.stderr)
+        print("USAGE: [merged_vcf] [depths_file]", file=sys.stderr)

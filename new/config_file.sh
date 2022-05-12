@@ -68,6 +68,14 @@ mutect2_THREADS=16
 
 call_positions_OUT_FILENAME="rc.vcf"
 call_positions_THREADS=1
+
+merge_vcf_w_coverage_MINBASEQ=0
+merge_vcf_w_coverage_MINQUAL=0
+merge_vcf_w_coverage_DEPTHSTMP="tmp.depths"
+merge_vcf_w_coverage_BEDTMP="tmp.bed"
+merge_vcf_w_coverage_OUT_FILENAME="merged_w_coverage.vcf"
+merge_vcf_w_coverage_THREADS=1
+
 get_folder(){
     basename "$(dirname "$1")"
 }

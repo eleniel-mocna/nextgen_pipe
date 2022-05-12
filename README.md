@@ -75,3 +75,4 @@ Edit the script according to the `#TODO` tags.
 
 - main docker needs: bash
 - main docker needs: apk add coreutils
+- add deletion of temp files
