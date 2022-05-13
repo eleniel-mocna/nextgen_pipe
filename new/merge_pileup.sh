@@ -81,10 +81,3 @@ if [ "$is_done" == true ]; then
         mark_done "$0" "${inputs[@]}"
 fi
 wait
-
-# This removes some warning lines which are for whatever reason
-# sometimes generated with the cat command.
-# (Maybe todo)
-# mv "$output_file" "${output_file}_tmp" 
-# < "${output_file}_tmp" sed '/\[/d'>"$output_file"
-# rm "${output_file}_tmp"

@@ -4,8 +4,8 @@ help(){
     echo "  INPUT:">&2
     echo "    - Config file">&2
     echo "    - Pairs of:">&2
-    echo "      - sample_fastq1.fq">&2
-    echo "      - sample_fastq2.fq">&2
+    echo "      - sample_fastq1.fq.gz">&2
+    echo "      - sample_fastq2.fq.gz">&2
     echo "  OUTPUT:">&2
     echo "    - Config file">&2
     echo "    - For every pair:">&2
@@ -42,7 +42,7 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             threads=$(get_threads "$star_THREADS")
             tmp_dir=$(docker exec star_oneDNA2pileup bash -c "mktemp -d star.XXXXXXXXX")
             
-            #TODO: zcat is for fq.gz files - for unzipped files this might cause havoc?
+            #CAVEAT: zcat is for fq.gz files - for unzipped files this might cause havoc?
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --genomeDir\
                 $star_align_REFERENCE  --genomeLoad LoadAndKeep --readFilesCommand zcat --readFilesIn $fastq1 $fastq2" 
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && mkdir 2ndpass"

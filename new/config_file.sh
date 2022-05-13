@@ -25,7 +25,7 @@ star_align_sjdbOverhang=75
 star_align_chimJunctionOverhangMin=15
 star_align_chimSegmentMin=15
 star_align_OUT_FILENAME="star_aligned.sam"
-star_align_REFERENCE="/data/Samuel_workdir/starRNA/star_genome" #TODO
+star_align_REFERENCE="/star_genome"
 star_THREADS=12
 
 markDuplicates_OUT_FILENAME="marked_duplicates.sam"
@@ -169,6 +169,6 @@ mark_done(){
     sed -i "s~$last_line~$new_line~" "$last_run_file"
 }
 
-multi_threader="/scripts/multi_threading/multi_threader.sh"
+multi_threader="/multi_threader/multi_threader.sh"
 # shellcheck source=/media/bioinfosrv/Samuel_workdir/nextgen_pipe/new/multi_threading/multi_threader.sh
 source "$multi_threader"

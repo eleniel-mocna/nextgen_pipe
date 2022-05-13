@@ -16,7 +16,29 @@ file so that all settings are present.
 Variables defined in the config file have the following notation:
 `[tool_name]_[VARIABLE_NAME]`
 
-### Input
+### Input in R
+
+When the main container is started, there are prepared functions for all scripts
+saved in the scripts folder. They accept the following formats of input:
+
+- String: input arguments are in a string (e.g. `do_something("config 1st_file 2nd_file")`)
+- Vector: Input arguments are in a vector (e.g. `do_something(c("config", "1st_file", "2nd_file"))`)
+
+All basic methods can be used as described above. There are also a few control flow functions:
+These accept only vector-like inputs.
+
+- `change_config_file(input, new_config)`: Changes the used config file to the new_config.
+- `merge_output_lists(config_file, ...)`: Intertwines all vectors given in `...` while using the `config_file`
+   as the config file. For example:
+
+   ```(R)
+   > merge_output_lists("config", c("config0", 1,2,3), c("config1", "A", "B", "C"))
+   [1] "config" "1"      "A"      "2"      "B"      "3"      "C"
+   ```
+
+For an example, see new/test_pipeline.R
+
+### Input via bash
 
 Every script takes a path to a config file
 and then paths/arguments for files for processing. Input can be given in these
@@ -73,6 +95,4 @@ Edit the script according to the `#TODO` tags.
 
 ## TODO
 
-- main docker needs: bash
-- main docker needs: apk add coreutils
-- add deletion of temp files
+- add thread meter reseter

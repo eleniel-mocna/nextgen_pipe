@@ -36,8 +36,8 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
-    out_folder="$(dirname "$(realpath "$vcf")")" # TODO: Is this right?
-    output_file="$out_folder/${i}_$filter_vcf_OUT_FILENAME" #TODO Change this, add to the config file
+    out_folder="$(dirname "$(realpath "$vcf")")"
+    output_file="$out_folder/${i}_$filter_vcf_OUT_FILENAME"
     header="$out_folder/${i}_$filter_vcf_TMP_FILENAME"
 
     if [ "$is_done" == false ]; then    

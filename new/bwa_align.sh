@@ -45,7 +45,6 @@ for (( i=0; i<("$inputs_length")/2; i++ )); do
     name=$(get_sample_name "$reads1")
     # shellcheck disable=SC2154 #$bwa_OUT_FILENAME is loaded by the config file
     output_file="$(dirname "$reads1")/${i}_$bwa_OUT_FILENAME"
-    
     # echo "docker exec bwa_oneDNA2pileup bash -c \
     #     bwa mem -t 12 -M -R $(bwa_readGroupHeader "$name") $reference $reads1 $reads2" > "$output_file"
     if [ "$is_done" == false ]; then        

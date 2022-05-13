@@ -5,6 +5,9 @@
 # doing, it doesn't try to be runnable anywhere and any time.
 # Instead if something breaks, take a look at the script and 
 # try debugging yourself.
+# 
+# Firstly set all the variables under the SETUP.
+# Then run this script from the root folder.
 #
 # REQUIREMENTS:
 #   - Any unix system
@@ -17,52 +20,34 @@
 # For more detailed description for switching in/out steps from this pipeline,
 # see README.
 
-help () {
-    echo
-    echo 'This is a script which prepares the oneDNA2pileup pipeline'
-    echo 'It is not bulletproof, so if something breaks, just try running'
-    echo 'the script line by line. Also there are more comments in the code'
-    echo 'for better debugging.'
-    echo 
-    echo 'USAGE:'
-    echo './setupOneDNA2pileup.sh <mount directory> <reference directory> <max CPUs per docker> <max memory per docker>'
-    echo '  <mount directory>: directory of your file system where you want the dockers to be mounted.'
-    # shellcheck disable=SC2016
-    echo '  <reference directory>: directory with the `ucsc.hg19.fasta` reference file'
-    echo '  <max CPUs per docker>: limit on the cpu usage of every docker (e.g. 12)'
-    # shellcheck disable=SC2016
-    echo '      for more info see docker documentation on flag `--cpus`'
-    echo '  <max memory per docker>: limit on the memory usage of every docker (e.g. 200g)'
-    # shellcheck disable=SC2016
-    echo '      for more info see docker documentation on flag `-m`'
-    echo
-    exit 0
-}
-
-if [ $# -ne 4 ] || [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
-help
-fi
-
 #########
 # SETUP #
 #########
 
-mount_directory="$1"
-reference_directory="$2"
-max_CPU="$3"
-max_memory="$4"
-password="$5"
-port="$6"
+max_CPU=20 # Max CPU threads per docker
+max_memory="200g" # Max memory usage per docker
+reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/" # Folder in which the hg19 is stored
+mount_directory="/mnt/storage/clip/" # Folder for the main mount
+star_genome_directory="/mnt/storage/clip/Samuel_workdir/starRNA/star_genome"
+# /\ Folder in which the reference for star aligner is stored
+threads_folder="/mnt/storage/clip/Samuel_workdir/nextgen_pipe/new/multi_threading"
+# /\ Folder, which contains available_threads with an integer in it, multi_threader.sh
+password=pass1234
+port=9009
 
 ########
 # MAIN #
 ########
+
+docker build -t ngs_main_samuel main
+
 docker run --name NGSMainSamuel \
     -d -it --cpus="$max_CPU" -m="$max_memory"  \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data \
     -e PASSWORD="$password" -p "$port":8787 \
     -e ROOT=TRUE \
+    -v "$threads_folder":/multi_threader \
     -v /var/run/docker.sock:/var/run/docker.sock ngs_main_samuel # UNIX
     # -v //var/run/docker.sock:/var/run/docker.sock # WINDOWS
 
@@ -106,6 +91,8 @@ docker run --name bamtools_oneDNA2pileup \
 # VarScan #
 ###########
 
+docker build -t varscan_samuel varScan
+
 docker run --name varScan_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
     -v "$reference_directory":/reference \
@@ -135,14 +122,19 @@ docker run --name SnpEff_oneDNA2pileup \
 # STAR aligner #
 ################
 
+docker build -t star_samuel starAligner
+
 docker run --name star_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
     -v "$reference_directory":/reference \
-    -v "$mount_directory":/data star_samuel
+    -v "$mount_directory":/data \
+    -v "$star_genome_directory":/star_genome star_samuel
 
 ################
 # ROCKER stuff #
 ################
+
+docker build -t rocker_1dna2p_samuel rocker-stuff
 
 docker run --name rocker_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
@@ -153,13 +145,9 @@ docker run --name rocker_oneDNA2pileup \
 # PYTHON stuff #
 ################
 
+docker build -t python_1dna2p_samuel python-stuff
+
 docker run --name python_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data python_1dna2p_samuel
-max_CPU=20
-max_memory="200g"
-reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/"
-mount_directory="/mnt/storage/clip/"
-password=pass1234
-port=9009

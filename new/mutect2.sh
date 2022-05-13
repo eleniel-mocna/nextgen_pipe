@@ -33,10 +33,9 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     input_bam=$(realpath "${inputs[((N_ARGUMENTS*$i))]}") #
     out_folder="$(dirname "$(realpath "$input_bam")")"
     output_file="$out_folder/${i}_$mutect2_OUT_FILENAME"
-    # TODO: If more files are produced, put them here
     if [ "$is_done" == false ]; then            
         {
-            threads=$(get_threads "$mutect2_THREADS") # TODO: Rename this
+            threads=$(get_threads "$mutect2_THREADS")
             docker exec samtools_oneDNA2pileup bash -c "samtools index $input_bam"
             docker exec gatk_oneDNA2pileup bash -c "gatk Mutect2 -I $input_bam -O $output_file -R $reference"
             give_back_threads "$threads"
@@ -45,7 +44,6 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             fi
         }&          
     fi
-    # TODO: Add the remaining output files!
     echo "$output_file"
     log "OUT: $output_file"
 done

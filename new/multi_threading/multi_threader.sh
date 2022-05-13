@@ -1,6 +1,6 @@
 #!/bin/bash
 
-threads_file="/data/Samuel_workdir/nextgen_pipe/new/multi_threading/available_threads" # TODO
+threads_file="/multi_threader/available_threads"
 
 _get_threads(){
     ( flock 200
