@@ -62,6 +62,7 @@ docker run --name NGSMainSamuel \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data \
     -e PASSWORD="$password" -p "$port":8787 \
+    -e ROOT=TRUE \
     -v /var/run/docker.sock:/var/run/docker.sock ngs_main_samuel # UNIX
     # -v //var/run/docker.sock:/var/run/docker.sock # WINDOWS
 
@@ -156,9 +157,9 @@ docker run --name python_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data python_1dna2p_samuel
-# max_CPU=20
-# max_memory="200g"
-# reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/"
-# mount_directory="/mnt/storage/clip/"
-# password=pass1234
-# port=9009
+max_CPU=20
+max_memory="200g"
+reference_directory="/mnt/storage/clip/Samuel_workdir/cvc/data/reference/"
+mount_directory="/mnt/storage/clip/"
+password=pass1234
+port=9009

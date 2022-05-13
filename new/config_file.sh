@@ -132,6 +132,7 @@ get_sample_name(){
 
 log(){
     echo "[$0]: $1">&2
+    echo "[$0]: $1">"NGS.log"
 }
 trap 'kill $(jobs -p)' EXIT
 # echo "Config loaded">&2
