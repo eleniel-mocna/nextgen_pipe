@@ -35,15 +35,18 @@ for (( i=0; i<("${#inputs[@]}"); i++ )); do
     input_sam=${inputs[i]}
     realpath_input_sam=$(realpath "$input_sam")
     out_folder="$(dirname "$(realpath "$input_sam")")"
-    output_file="$out_folder/${i}_$readGroups_OUT_FILENAME"
+    output_file="$out_folder/${i}_$read_groups_OUT_FILENAME"
     if [ "$is_done" == false ]; then        
         {
-            threads=$(get_threads "$readGroups_THREADS")
+            threads=$(get_threads "$read_groups_THREADS")
             docker exec gatk_oneDNA2pileup bash -c \
-            "gatk AddOrReplaceReadGroups -I $realpath_input_sam -O $output_file -ID Nazev1 \
-            -LB nazev2 -PL illumina -PU HiSeq2000 -SM Nazev3 \
-            --VALIDATION_STRINGENCY SILENT --TMP_DIR $out_folder">/dev/null
+            "gatk AddOrReplaceReadGroups -I $realpath_input_sam -O $output_file -ID $read_groups_ID \
+            -LB $read_groups_LB -PL $read_groups_PL -PU $read_groups_PU -SM $read_groups_SM \
+            --VALIDATION_STRINGENCY $read_groups_VALIDATION_STRINGENCY --TMP_DIR $out_folder">/dev/null
             # This /\ for some reason prints some of the debug lines to stdout...
+            if [ "$read_groups_DELETE_INPUT" == "true" ]; then
+                rm "$realpath_input_sam"
+            fi
             give_back_threads "$threads"
         }&
         

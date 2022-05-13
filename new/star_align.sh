@@ -48,11 +48,15 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && mkdir 2ndpass"
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --runMode genomeGenerate \
                 --genomeDir 2ndpass/ --genomeFastaFiles $reference --sjdbFileChrStartEnd SJ.out.tab \
-                --sjdbOverhang 75 --runThreadN $threads"
+                --sjdbOverhang $star_align_sjdbOverhang --runThreadN $threads"
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --genomeDir 2ndpass/ --readFilesCommand zcat \
-            --readFilesIn $fastq1 $fastq2 --runThreadN $threads --chimJunctionOverhangMin 15 --chimSegmentMin 15 \
+            --readFilesIn $fastq1 $fastq2 --runThreadN $threads --chimJunctionOverhangMin $star_align_chimJunctionOverhangMin \
+            --chimSegmentMin $star_align_chimSegmentMin \
             --outStd SAM">"$output_file"
             docker exec star_oneDNA2pileup bash -c "rm -r $tmp_dir"
+            if [ "$star_align_DELETE_INPUT" == "true" ]; then
+                rm "$fastq1" "$fastq2"
+            fi
             give_back_threads "$threads"
         }&          
     fi

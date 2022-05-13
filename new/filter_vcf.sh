@@ -1,4 +1,4 @@
-    #!/bin/bash
+#!/bin/bash
 help(){
     echo "filter_vcf.sh: Filter vcf by bcftools.">&2
     echo "  INPUT:">&2
@@ -50,6 +50,9 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
                 > "$header"
             docker exec bcftools_oneDNA2pileup bash -c "bcftools reheader --header $header $vcf | bcftools filter -e \"(AD/(AD+RD))<0.15\"" > "$output_file"
             give_back_threads "$threads"
+            if [ "$filter_vcf_DELETE_INPUT" == "true" ]; then
+                rm "$vcf"
+            fi
         }&
     fi
     echo "$output_file"

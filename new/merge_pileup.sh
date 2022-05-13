@@ -20,21 +20,17 @@ merge(){
     # Split given string by ;
     for input_pileup in $(echo "$1" | tr ";" "\n")
     do
-        # if [ -z "$first" ]; then       
-        #     first='false'
-        #     out_folder="$(dirname "$(realpath "$input_pileup")")"
-        #     # shellcheck disable=SC2154 # From config file
-        #     output_file="$out_folder/$merge_pileup_OUT_FILENAME"
-        #     cp "$input_pileup" "$output_file"  
-        # else
-            out_folder="$(dirname "$(realpath "$input_pileup")")"
-            output_file="$out_folder/$merge_pileup_OUT_FILENAME"
-            ((i+=1))
-            pileups[i]="$input_pileup"   
-        # fi
+        out_folder="$(dirname "$(realpath "$input_pileup")")"
+        # shellcheck disable=SC2154
+        output_file="$out_folder/$merge_pileup_OUT_FILENAME"
+        ((i+=1))
+        pileups[i]="$input_pileup"   
     done
-    # echo "${pileups[@]}"
     cat "${pileups[@]}">"$output_file"
+    # shellcheck disable=SC2154
+    if [ "$merge_pileup_DELETE_INPUT" == "true" ]; then
+        rm "${pileups[@]}"
+    fi
     log "OUT: $output_file"
     echo "$output_file"
 }

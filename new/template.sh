@@ -1,4 +1,9 @@
 #!/bin/bash
+
+########################
+# HELP AND DESCRIPTION #
+########################
+
 help(){ # TODO Rewrite these help prints.
     echo "NAME.sh: Short summary of this script's functionality.">&2
     echo "  INPUT:">&2
@@ -14,6 +19,11 @@ help(){ # TODO Rewrite these help prints.
     echo "      - second_file.ext">&2
     echo "      - ...">&2
 }
+
+#################
+# INPUT READING #
+#################
+
 # shellcheck source=/dev/null
 source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
 N_ARGUMENTS=1 #TODO: Number of arguments per sample
@@ -34,6 +44,10 @@ log  "OUT: $config_file"
 # shellcheck disable=SC2154 disable=SC1090
 is_done=$(is_already_done "$0" "${inputs[@]}")
 
+###############
+# APPLICATION #
+###############
+
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     argument1=$(realpath "${inputs[((N_ARGUMENTS*$i))]}") # TODO Pick how many arguments are used, rename variables
@@ -46,6 +60,9 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         {
             threads=$(get_threads "$NAME_THREADS") # TODO: Rename this
             : # TODO: Do your magic!
+            if [ "$NAME_DELETE_INPUT" == "true" ]; then # TODO: Rename, pick how many arguments
+                rm "$argument1" # "$argument2" # "$argument3"
+            fi
             give_back_threads "$threads"
         }&          
     fi

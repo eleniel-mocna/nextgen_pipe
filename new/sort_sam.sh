@@ -37,6 +37,9 @@ for (( i=0; i<("$inputs_length"/"$N_ARGUMENTS"); i++ )); do
         {
             threads=$(get_threads "$sortSam_THREADS")
             docker exec gatk_oneDNA2pileup bash -c "gatk SortSamSpark -I $input_sam -O $output_file"        
+            if [ "$sort_sam_DELETE_INPUT" == "true" ]; then
+                rm "$input_sam"
+            fi
             give_back_threads "$threads"
         }&           
     fi

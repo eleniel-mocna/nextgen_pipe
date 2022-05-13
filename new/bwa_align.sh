@@ -52,8 +52,11 @@ for (( i=0; i<("$inputs_length")/2; i++ )); do
         {
         threads=$(get_threads $bwa_threads $timeout)
         docker exec bwa_oneDNA2pileup bash -c \
-            "bwa mem -t $threads -M -R $(bwa_readGroupHeader "$name") $reference $reads1 $reads2" > "$output_file"
+            "bwa mem -t $threads -M -R $(bwa_readGroupHeader "$name") $reference $reads1 $reads2" > "$output_file"       
         give_back_threads "$threads"
+        if [ "$bwa_DELETE_INPUT" == "true" ]; then
+            rm "$reads1" "$reads2"
+        fi
         }&
     fi
     echo "$output_file"

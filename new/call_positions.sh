@@ -41,6 +41,9 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             docker exec rocker_oneDNA2pileup bash -c "eval  \"Rscript  /RFiles/create.vcf.R $readcounts \
                 $output_file \"">/dev/null
             give_back_threads "$threads"
+            if [ "$call_positions_DELETE_INPUT" == "true" ]; then
+                rm "$readcounts"
+            fi
         }&          
     fi
     echo "$output_file"

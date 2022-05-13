@@ -46,7 +46,7 @@ for input_bam in "${inputs[@]}"; do
     realpath_input_bam=$(realpath "$input_bam")
     out_folder="$(dirname "$(realpath "$input_bam")")"
     for chr in $(docker exec samtools_oneDNA2pileup bash -c "samtools idxstats $realpath_input_bam" | cut -f 1 | head -n -1); do
-        output_file="$out_folder/${split_OUT_FILENAME}${chr}$split_OUT_EXTENSION"
+        output_file="$out_folder/${split_bam_OUT_FILENAME}${chr}$split_bam_OUT_EXTENSION"
         if [ "$is_done" == false ]; then        
             {
             threads=$(get_threads 1)            
@@ -57,6 +57,10 @@ for input_bam in "${inputs[@]}"; do
         echo "$output_file"
         log "OUT: $output_file"
     done
+    wait
+    if [ "$split_bam_DELETE_INPUT" == "true" ]; then
+        rm "$realpath_input_bam"
+    fi
 done
 wait
 if [ "$is_done" == true ]; then

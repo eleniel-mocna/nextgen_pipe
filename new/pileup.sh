@@ -37,6 +37,9 @@ for (( i=0; i<("${#inputs[@]}"); i++ )); do
             threads=$(get_threads "$pileup_THREADS")
             docker exec samtools_oneDNA2pileup bash -c "samtools mpileup -f $reference -B $realpath_input_bam" > "$output_file"
             sed -i -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$output_file" # This removes all but one newline at the end of the pileup.
+            if [ "$pileup_DELETE_INPUT" == "true" ]; then
+                rm "$realpath_input_bam"
+            fi
             give_back_threads "$threads"
         }&
     fi

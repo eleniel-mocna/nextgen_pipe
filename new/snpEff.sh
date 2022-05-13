@@ -38,7 +38,10 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     if [ "$is_done" == false ]; then           
         {
             threads=$(get_threads "$snpEff_THREADS")
-            docker exec SnpEff_oneDNA2pileup bash -c "java  -Xmx5g -jar /home/biodocker/bin/snpEff/snpEff.jar hg19 -v $vcf_in"  > "$output_file"        
+            docker exec SnpEff_oneDNA2pileup bash -c "java  $snpEff_maxMemory -jar /home/biodocker/bin/snpEff/snpEff.jar $snpEff_REFERENCE -v $vcf_in"  > "$output_file"        
+            if [ "$snpEff_DELETE_INPUT" == "true" ]; then
+                rm "$vcf_in"
+            fi
             give_back_threads "$threads"
         }&
         

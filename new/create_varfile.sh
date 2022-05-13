@@ -40,7 +40,11 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     output_file="$out_folder/$create_varfile_OUT_FILENAME"
     if [ "$is_done" == false ]; then    
         rm -f "$output_file"
+        if [ "$create_varfile_DELETE_INPUT" == "true" ]; then
+            rm "$vcf"
+        fi
     fi
+    
 done
 
 declare -a output_files
@@ -52,7 +56,6 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         skip=$(grep -n -m 1 '#CHR' "$vcf" | cut -d: -f1)
         ((skip="$skip"+1))
 
-        # TODO: the original awk command was {print $1,$2,$4,$4} - I don't think that is right...
         tail -n +$skip "$vcf" | awk  'BEGIN  {FS="\t";OFS = "\t";ORS="\n"}  {print $1,$2,$4,$4}'   >> "$output_file"    
     fi
     output_files[i]=$output_file    

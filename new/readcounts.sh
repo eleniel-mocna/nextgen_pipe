@@ -42,8 +42,12 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     if [ "$is_done" == false ]; then    
         {
             threads=$(get_threads "$readcounts_THREADS")
-            docker exec varScan_oneDNA2pileup    bash -c "java -Xmx5g -jar VarScan.jar readcounts $pileup \
-                --min-coverage 0 --min-base-qual 0 --output-file  $output_file --variants-file $varfile">/dev/null
+            docker exec varScan_oneDNA2pileup    bash -c "java $readcounts_memory -jar VarScan.jar readcounts $pileup \
+                --min-coverage $readcounts_min_coverage --min-base-qual $readcounts_min_base_qual \
+                 --output-file  $output_file --variants-file $varfile">/dev/null
+            if [ "$readcounts_DELETE_INPUT" == "true" ]; then
+                rm "$pileup" "$varfile"
+            fi
             give_back_threads "$threads"
         }&
             
