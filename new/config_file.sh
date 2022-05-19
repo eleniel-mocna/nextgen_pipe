@@ -125,6 +125,14 @@ merge_vcf_w_coverage_THREADS=1
 cvc_DELETE_INPUT="false"
 cvc_THREADS=1
 cvc_OUT_FILENAME="cvc_variants.vcf"
+cvc_MIN_BASEQ=14
+cvc_MIN_MAPQ=7
+
+vep_OUT_FILENAME="merged_ann.txt"
+vep_THREADS=1
+vep_DELETE_INPUT="false"
+vep_dir_cache="/data/JS_workdir/VEP/.vep/"
+    vep_fasta="/data/JS_workdir/VEP/.vep/homo_sapiens/106_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz"
 
 get_folder(){
     basename "$(dirname "$1")"

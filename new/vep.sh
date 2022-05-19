@@ -4,17 +4,16 @@
 # HELP AND DESCRIPTION #
 ########################
 
-# TODO: check if this works
 help(){
-    echo "cvc.sh: Run pair read variant calling on a given sam/bam file.">&2
+    echo "vep.sh: ensembl variant effect predictor.">&2
     echo "  INPUT:">&2
     echo "    - Config file">&2
     echo "    - For each file:">&2
-    echo "      - aligned.bam">&2
+    echo "      - merged_w_coverage.vcf">&2
     echo "  OUTPUT:">&2
     echo "    - Config file">&2
     echo "    - For each file:">&2
-    echo "      - cvc_variants.vcf">&2
+    echo "      - merged_ann.txt ">&2
 }
 
 #################
@@ -23,7 +22,7 @@ help(){
 
 # shellcheck source=/dev/null
 source "/data/Samuel_workdir/nextgen_pipe/new/input_reader.sh"
-N_ARGUMENTS=1 
+N_ARGUMENTS=1
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"
 # shellcheck disable=SC2154
@@ -47,20 +46,23 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
-    input_bam=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
-    out_folder="$(dirname "$(realpath "$input_bam")")"
-    output_file="$out_folder/$cvc_OUT_FILENAME"
+    vcf_in=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")    
+    out_folder="$(dirname "$(realpath "$vcf_in")")"
+    output_file="$out_folder/$vep_OUT_FILENAME"
     if [ "$is_done" == false ]; then            
         {
-            threads=$(get_threads "$cvc_THREADS")
-            docker exec cvc_oneDNA2pileup bash -c "samtools view $input_bam\
-                    | /cvc/VariantCaller.out --mapq $cvc_MIN_MAPQ --qual $cvc_MIN_BASEQ --reference $reference --vcf-file $output_file -">/dev/null
-            if [ "$cvc_DELETE_INPUT" == "true" ]; then
-                rm "$input_bam" # "$argument2" # "$argument3"
+            threads=$(get_threads "$vep_THREADS")
+            docker exec vep_oneDNA2pileup bash -c \
+            "/opt/vep/src/ensembl-vep/vep -i $vcf_in -o $output_file \
+            -offline -merged --dir_cache $vep_dir_cache --assembly GRCh37\
+            --fasta $vep_fasta --everything --force_overwrite"
+            if [ "$vep_DELETE_INPUT" == "true" ]; then
+                rm "$vcf_in"
             fi
             give_back_threads "$threads"
         }&          
     fi
+    # TODO: Add the remaining output files!
     echo "$output_file"
     log "OUT: $output_file"
 done
