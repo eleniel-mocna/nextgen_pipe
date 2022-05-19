@@ -56,3 +56,4 @@
 # DONE    star_align.sh
 # NONV    template.sh
 # NONV    test_pipeline.sh
+# cvc.sh

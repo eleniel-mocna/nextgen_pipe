@@ -122,6 +122,10 @@ merge_vcf_w_coverage_BEDTMP="tmp.bed"
 merge_vcf_w_coverage_OUT_FILENAME="merged_w_coverage.vcf"
 merge_vcf_w_coverage_THREADS=1
 
+cvc_DELETE_INPUT="false"
+cvc_THREADS=1
+cvc_OUT_FILENAME="cvc_variants.vcf"
+
 get_folder(){
     basename "$(dirname "$1")"
 }
