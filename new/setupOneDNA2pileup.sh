@@ -153,12 +153,23 @@ docker run --name python_oneDNA2pileup \
     -v "$mount_directory":/data python_1dna2p_samuel
 
 #######
-# cvc #
+# CVC #
 #######
 
 # TODO add docker build
+git clone https://github.com/eleniel-mocna/CustomVariantCaller
+docker build -t cvc_eleniel CustomVariantCaller
 
 docker run --name cvc_oneDNA2pileup \
     -d -it --cpus="$max_CPU" -m="$max_memory" \
     -v "$reference_directory":/reference \
     -v "$mount_directory":/data cvc_eleniel
+
+#######
+# VEP #
+#######
+
+docker run --name vep_oneDNA2pileup \
+    -d -it --cpus="$max_CPU" -m="$max_memory" \
+    -v "$reference_directory":/reference \
+    -v "$mount_directory":/data ensemblorg/ensembl-vep

@@ -46,6 +46,21 @@ get_threads(){
     echo "$n_threads"
 }
 
-restore_threads(){
-    echo "$1">"$threads_file"
+set_threads(){
+    ( flock 200
+    cat>"$threads_file"<<<"$1"
+    flock -u 200 )200>"$threads_file.lock"
+}
+
+subtract_threads(){
+    ( flock 200
+    available_threads="$(cat "$threads_file")"    
+    cat>"$threads_file"<<<$(("$available_threads"-"$1"))
+    flock -u 200 )200>"$threads_file.lock"
+}
+add_threads(){
+    ( flock 200
+    available_threads="$(cat "$threads_file")"    
+    cat>"$threads_file"<<<$(("$available_threads"+"$1"))
+    flock -u 200 )200>"$threads_file.lock"
 }

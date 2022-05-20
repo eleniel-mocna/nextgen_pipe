@@ -8,5 +8,5 @@ snpSift(vcf_cache) %>% snpEff(vcf_cache)
 varfile_cache <- create_varfile(vcf_cache)
 star_align(fastqs_cache)
 rc_cache <- merge_output_lists("-", merged_p_cache, varfile_cache) %>% readcounts %>% call_positions
-merge_output_lists("-", bam_cache, rc_cache) %>% merge_vcf_w_coverage
+merge_output_lists("-", bam_cache, rc_cache) %>% merge_vcf_w_coverage 
 read_groups(sam_cache) %>% split_bam %>% mutect2

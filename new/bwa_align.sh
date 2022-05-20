@@ -29,11 +29,6 @@ if [ "$config_file" = "-h" ] \
     exit 1
 fi
 
-# shellcheck source=/media/bioinfosrv/Samuel_workdir/nextgen_pipe/new/config_file.sh
-source "$config_file"
-echo  "$config_file"
-log  "OUT: $config_file"
-is_done=$(is_already_done "$0" "${inputs[@]}")
 # shellcheck disable=SC2154 #$reference is loaded by the config file
 
 (( timeout="$inputs_length"*"$bwa_timeout_per_sample"/2 ))

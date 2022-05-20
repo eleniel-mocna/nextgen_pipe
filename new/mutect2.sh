@@ -20,11 +20,6 @@ if [ $(( "$inputs_length"%"$N_ARGUMENTS" )) -ne 0 ] || [ "$config_file" = "-h" ]
     help
     exit 1
 fi
-
-# shellcheck disable=SC2154 disable=SC1090
-source "$config_file"
-realpath "$config_file"
-log  "OUT: $config_file"
 # shellcheck disable=SC2154 disable=SC1090
 is_done=$(is_already_done "$0" "${inputs[@]}")
 

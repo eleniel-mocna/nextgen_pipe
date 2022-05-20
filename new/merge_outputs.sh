@@ -25,11 +25,6 @@ if [ $(( "$inputs_length"%"$N_ARGUMENTS" )) -ne 0 ] || [ "$config_file" = "-h" ]
 fi
 
 # shellcheck disable=SC2154 disable=SC1090
-source "$config_file"
-realpath "$config_file"
-log  "OUT: $config_file"
-
-# shellcheck disable=SC2154 disable=SC1090
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     output_file=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     lines_per_sample="${inputs[((N_ARGUMENTS*$i+1))]}"

@@ -128,6 +128,8 @@ cvc_OUT_FILENAME="cvc_variants.vcf"
 cvc_MIN_BASEQ=14
 cvc_MIN_MAPQ=7
 
+prepare_NTHREADS=50
+
 vep_OUT_FILENAME="merged_ann.txt"
 vep_THREADS=1
 vep_DELETE_INPUT="false"

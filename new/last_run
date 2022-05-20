@@ -21,9 +21,9 @@
 
 #new/bwa_align.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
 
-#new/mark_duplicates.sh# started... /data/Samuel_workdir/nextgen_pipe/test_folder/0_bwa_aligned.sam
+#new/mark_duplicates.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
 
-#new/sort_sam.sh# started... 
+#new/sort_sam.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
 
 #new/read_groups.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
 
@@ -36,3 +36,7 @@
 #new/sam2bam.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
 
 #new/mutect2.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#/scripts/prepare.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+
+#/scripts/bwa_align.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
