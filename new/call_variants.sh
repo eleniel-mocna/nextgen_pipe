@@ -35,6 +35,11 @@ for (( i=0; i<("${#inputs[@]}"); i++ )); do
             --min-reads2 $call_variants_min_reads --min-var-freq $call_variants_min_var_freq \
             --output-vcf 1 --strand-filter $call_variants_strand_filter \
             --variants $call_variants_variants" > "$output_file"
+            log "EXIT STATUS ($?) for: java -jar VarScan.jar mpileup2cns $realpath_input_pileup \
+                --p-value $call_variants_p_value  --min-coverage $call_variants_min_coverage \
+                --min-reads2 $call_variants_min_reads --min-var-freq $call_variants_min_var_freq \
+                --output-vcf 1 --strand-filter $call_variants_strand_filter \
+                --variants $call_variants_variants > $output_file"
             mv "$output_file" "${output_file}_tmp"
             < "${output_file}_tmp" sed '/\[/d'>"$output_file"
             rm "${output_file}_tmp"

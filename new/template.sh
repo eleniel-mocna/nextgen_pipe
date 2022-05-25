@@ -56,6 +56,7 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         {
             threads=$(get_threads "$NAME_THREADS") # TODO: Rename this
             : # TODO: Do your magic!
+            log "EXIT STATUS ($?) for: " # Write script for logging
             if [ "$NAME_DELETE_INPUT" == "true" ]; then # TODO: Rename, pick how many arguments
                 rm "$argument1" # "$argument2" # "$argument3"
             fi

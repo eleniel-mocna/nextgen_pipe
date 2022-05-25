@@ -54,6 +54,7 @@ i=0
 
 # shellcheck source=/media/bioinfosrv/Samuel_workdir/nextgen_pipe/new/config_file.sh
 source "$config_file"
+log "$config_file"
 realpath "$config_file"
 
 for inp in "${tmp_input[@]}"; do

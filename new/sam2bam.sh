@@ -23,7 +23,9 @@ for (( i=0; i<("$inputs_length"); i++ )); do
             {
             threads=$(get_threads "$sam2bam_THREADS")
             docker exec samtools_oneDNA2pileup bash -c "samtools view -h -b $input_sam" > "$output_file"
+            log "EXIT STATUS ($?) for: samtools view -h -b $input_sam $output_file"
             docker exec samtools_oneDNA2pileup bash -c "samtools index $output_file"
+            log "EXIT STATUS ($?) for: samtools index $output_file"
             if [ "$sam2bam_DELETE_INPUT" == "true" ]; then
                 rm "$input_sam"
             fi

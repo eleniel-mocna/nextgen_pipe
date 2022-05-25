@@ -27,6 +27,7 @@ merge(){
         pileups[i]="$input_pileup"   
     done
     cat "${pileups[@]}">"$output_file"
+    log "EXIT STATUS ($?) for: cat ${pileups[*]} > $output_file"
     # shellcheck disable=SC2154
     if [ "$merge_pileup_DELETE_INPUT" == "true" ]; then
         rm "${pileups[@]}"

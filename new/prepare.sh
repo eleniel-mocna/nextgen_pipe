@@ -57,7 +57,9 @@ for (( i=0; i<("$inputs_length")/3; i++ )); do
     if [ "$is_done" == false ]; then    
         mkdir -p "$name"
         ln -f "$reads1" "$reads1_new"
+        log "EXIT STATUS ($?) for: ln -f $reads1 $reads1_new"
         ln -f "$reads2" "$reads2_new"    
+        log "EXIT STATUS ($?) for: ln -f $reads2 $reads2_new"
     fi
     echo "$reads1_new"    
     log "$reads1_new"

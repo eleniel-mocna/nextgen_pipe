@@ -32,7 +32,9 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         {
             threads=$(get_threads "$mutect2_THREADS")
             docker exec samtools_oneDNA2pileup bash -c "samtools index $input_bam"
+            log "EXIT STATUS ($?) for: samtools index $input_bam"
             docker exec gatk_oneDNA2pileup bash -c "gatk Mutect2 -I $input_bam -O $output_file -R $reference"
+            log "EXIT STATUS ($?) for: gatk Mutect2 -I $input_bam -O $output_file -R $reference"
             give_back_threads "$threads"
             if [ "$mutect2_DELETE_INPUT" == "true" ]; then
                 rm "$input_bam"

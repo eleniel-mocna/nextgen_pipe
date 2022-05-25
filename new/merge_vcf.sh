@@ -32,6 +32,7 @@ merge(){
         fi
     done
     cat "${vcfs[@]}" | awk '$1 ~ /^#/ {next} {print $0}'>>"$output_file"    
+    log "EXIT STATUS ($?) for: cat ${vcfs[*]} | awk '$1 ~ /^#/ {next} {print $0}'>>$output_file"
     # shellcheck disable=SC2154
     if [ "$merge_vcf_DELETE_INPUT" == "true" ]; then
         rm "${vcfs[@]}"

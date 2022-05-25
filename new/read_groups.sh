@@ -39,6 +39,9 @@ for (( i=0; i<("${#inputs[@]}"); i++ )); do
             -LB $read_groups_LB -PL $read_groups_PL -PU $read_groups_PU -SM $read_groups_SM \
             --VALIDATION_STRINGENCY $read_groups_VALIDATION_STRINGENCY --TMP_DIR $out_folder">/dev/null
             # This /\ for some reason prints some of the debug lines to stdout...
+            log "EXIT STATUS ($?) for: gatk AddOrReplaceReadGroups -I $realpath_input_sam -O $output_file -ID $read_groups_ID \
+            -LB $read_groups_LB -PL $read_groups_PL -PU $read_groups_PU -SM $read_groups_SM \
+            --VALIDATION_STRINGENCY $read_groups_VALIDATION_STRINGENCY --TMP_DIR $out_folder"
             if [ "$read_groups_DELETE_INPUT" == "true" ]; then
                 rm "$realpath_input_sam"
             fi

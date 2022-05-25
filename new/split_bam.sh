@@ -46,6 +46,7 @@ for input_bam in "${inputs[@]}"; do
             {
             threads=$(get_threads 1)            
             docker exec samtools_oneDNA2pileup bash -c "samtools view -h -b $realpath_input_bam $chr">"$output_file"
+            log "EXIT STATUS ($?) for: samtools view -h -b $realpath_input_bam $chr > $output_file"
             give_back_threads "$threads"
             }&    
         fi

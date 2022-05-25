@@ -29,6 +29,7 @@ for input_sam in "${inputs[@]}"; do
         {
             threads=$(get_threads "$filter_vcf_THREADS")        
             docker exec gatk_oneDNA2pileup bash -c "gatk MarkDuplicatesSpark -I $realpath_input_sam -O $output_file"
+            log "EXIT STATUS ($?) for: gatk MarkDuplicatesSpark -I $realpath_input_sam -O $output_file"
             give_back_threads "$threads"
             if [ "$markDuplicates_DELETE_INPUT" == "true" ]; then
                 rm "$realpath_input_sam"

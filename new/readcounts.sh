@@ -41,6 +41,9 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             docker exec varScan_oneDNA2pileup    bash -c "java $readcounts_memory -jar VarScan.jar readcounts $pileup \
                 --min-coverage $readcounts_min_coverage --min-base-qual $readcounts_min_base_qual \
                  --output-file  $output_file --variants-file $varfile">/dev/null
+            log "EXIT STATUS ($?) for: java $readcounts_memory -jar VarScan.jar readcounts $pileup \
+                --min-coverage $readcounts_min_coverage --min-base-qual $readcounts_min_base_qual \
+                 --output-file  $output_file --variants-file $varfile"
             if [ "$readcounts_DELETE_INPUT" == "true" ]; then
                 rm "$pileup" "$varfile"
             fi

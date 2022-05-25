@@ -51,6 +51,8 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             threads=$(get_threads "$cvc_THREADS")
             docker exec cvc_oneDNA2pileup bash -c "samtools view $input_bam\
                     | /cvc/VariantCaller.out --mapq $cvc_MIN_MAPQ --qual $cvc_MIN_BASEQ --reference $reference --vcf-file $output_file -">/dev/null
+            log "EXIT STATUS ($?) for: samtools view $input_bam\
+                    | /cvc/VariantCaller.out --mapq $cvc_MIN_MAPQ --qual $cvc_MIN_BASEQ --reference $reference --vcf-file $output_file -"
             if [ "$cvc_DELETE_INPUT" == "true" ]; then
                 rm "$input_bam" # "$argument2" # "$argument3"
             fi

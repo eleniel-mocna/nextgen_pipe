@@ -37,6 +37,8 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             docker exec SnpEff_oneDNA2pileup bash -c \
                 "java  -Xmx5g -jar /home/biodocker/bin/snpEff/SnpSift.jar annotate\
                 $snpSift_DATABASE $vcf_in" > "$output_file"
+            log "EXIT STATUS ($?) for: java  -Xmx5g -jar /home/biodocker/bin/snpEff/SnpSift.jar annotate\
+                $snpSift_DATABASE $vcf_in > $output_file"
             if [ "$snpSift_DELETE_INPUT" == "true" ]; then
                 rm "$vcf_in"
             fi

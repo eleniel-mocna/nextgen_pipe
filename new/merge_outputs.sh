@@ -41,6 +41,8 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
 done
 
 docker exec python_oneDNA2pileup bash -c "python python-scripts/merge_outputs.py $args"
+log "EXIT STATUS ($?) for: python python-scripts/merge_outputs.py $args"
+
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     output_file=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     lines_per_sample="${inputs[((N_ARGUMENTS*$i+1))]}"

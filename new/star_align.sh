@@ -40,16 +40,32 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             
             #CAVEAT: zcat is for fq.gz files - for unzipped files this might cause havoc?
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --genomeDir\
-                $star_align_REFERENCE  --genomeLoad LoadAndKeep --readFilesCommand zcat --readFilesIn $fastq1 $fastq2" 
+                $star_align_REFERENCE  --genomeLoad LoadAndKeep --readFilesCommand zcat --readFilesIn $fastq1 $fastq2"
+            log "EXIT STATUS ($?) for: cd $tmp_dir && /STAR/source/STAR --genomeDir\
+                $star_align_REFERENCE  --genomeLoad LoadAndKeep --readFilesCommand zcat --readFilesIn $fastq1 $fastq2"
+            
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && mkdir 2ndpass"
+            log "EXIT STATUS ($?) for:cd $tmp_dir && mkdir 2ndpass"
+
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --runMode genomeGenerate \
                 --genomeDir 2ndpass/ --genomeFastaFiles $reference --sjdbFileChrStartEnd SJ.out.tab \
                 --sjdbOverhang $star_align_sjdbOverhang --runThreadN $threads"
+            log "EXIT STATUS ($?) for: cd $tmp_dir && /STAR/source/STAR --runMode genomeGenerate \
+                --genomeDir 2ndpass/ --genomeFastaFiles $reference --sjdbFileChrStartEnd SJ.out.tab \
+                --sjdbOverhang $star_align_sjdbOverhang --runThreadN $threads"
+            
             docker exec star_oneDNA2pileup bash -c "cd $tmp_dir && /STAR/source/STAR --genomeDir 2ndpass/ --readFilesCommand zcat \
             --readFilesIn $fastq1 $fastq2 --runThreadN $threads --chimJunctionOverhangMin $star_align_chimJunctionOverhangMin \
             --chimSegmentMin $star_align_chimSegmentMin \
             --outStd SAM">"$output_file"
+            log "EXIT STATUS ($?) for: cd $tmp_dir && /STAR/source/STAR --genomeDir 2ndpass/ --readFilesCommand zcat \
+            --readFilesIn $fastq1 $fastq2 --runThreadN $threads --chimJunctionOverhangMin $star_align_chimJunctionOverhangMin \
+            --chimSegmentMin $star_align_chimSegmentMin \
+            --outStd SAM > $output_file"
+            
             docker exec star_oneDNA2pileup bash -c "rm -r $tmp_dir"
+            log "EXIT STATUS ($?) for: rm -r $tmp_dir"
+            
             if [ "$star_align_DELETE_INPUT" == "true" ]; then
                 rm "$fastq1" "$fastq2"
             fi

@@ -52,15 +52,16 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         ((skip="$skip"+1))
 
         tail -n +$skip "$vcf" | awk  'BEGIN  {FS="\t";OFS = "\t";ORS="\n"}  {print $1,$2,$4,$4}'   >> "$output_file"    
+        log "EXIT STATUS ($?) for: tail -n +$skip $vcf | awk  'BEGIN  {FS=\t;OFS = \t;ORS=\n}  {print $1,$2,$4,$4}'   >> $output_file"
     fi
     output_files[i]=$output_file    
 done
-# printf "%s\n" "${output_files[@]}" | sort -u
 
 for varfile in "${output_files[@]}"; do
     if [ "$is_done" == false ]; then  
         mv "$varfile" "${varfile}_tmp"
         sort -u "${varfile}_tmp">"$varfile"
+        log "EXIT STATUS ($?) for: sort -u ${varfile}_tmp > $varfile"
         rm "${varfile}_tmp"
     fi
     echo "$varfile"

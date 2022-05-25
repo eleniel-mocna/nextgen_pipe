@@ -43,7 +43,13 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
                 <(docker exec bcftools_oneDNA2pileup bash -c "cat $reference_vcf_header") \
                 <(docker exec bcftools_oneDNA2pileup bash -c "bcftools view -h $vcf" | grep -v '^##') \
                 > "$header"
+            log "EXIT STATUS ($?) for: cat \
+                <(docker exec bcftools_oneDNA2pileup bash -c \"bcftools view -h $vcf\" | grep '^##') \
+                <(docker exec bcftools_oneDNA2pileup bash -c \"cat $reference_vcf_header\") \
+                <(docker exec bcftools_oneDNA2pileup bash -c \"bcftools view -h $vcf\" | grep -v '^##') \
+                > $header"
             docker exec bcftools_oneDNA2pileup bash -c "bcftools reheader --header $header $vcf | bcftools filter -e \"(AD/(AD+RD))<0.15\"" > "$output_file"
+            log "EXIT STATUS ($?) for: bcftools reheader --header $header $vcf | bcftools filter -e \"(AD/(AD+RD))<0.15\" > $output_file"
             give_back_threads "$threads"
             if [ "$filter_vcf_DELETE_INPUT" == "true" ]; then
                 rm "$vcf"

@@ -52,6 +52,9 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
             "/opt/vep/src/ensembl-vep/vep -i $vcf_in -o $output_file \
             -offline -merged --dir_cache $vep_dir_cache --assembly GRCh37\
             --fasta $vep_fasta --everything --force_overwrite"
+            log "EXIT STATUS ($?) for: /opt/vep/src/ensembl-vep/vep -i $vcf_in -o $output_file \
+            -offline -merged --dir_cache $vep_dir_cache --assembly GRCh37\
+            --fasta $vep_fasta --everything --force_overwrite"
             if [ "$vep_DELETE_INPUT" == "true" ]; then
                 rm "$vcf_in"
             fi

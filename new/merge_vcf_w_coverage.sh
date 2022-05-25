@@ -37,7 +37,8 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     depths_file="$out_folder/$merge_vcf_w_coverage_DEPTHSTMP"
     output_file="$out_folder/$merge_vcf_w_coverage_OUT_FILENAME"
     if [ "$is_done" == false ]; then            
-            docker exec samtools_oneDNA2pileup bash -c "samtools index $in_bam"
+        docker exec samtools_oneDNA2pileup bash -c "samtools index $in_bam"
+        log "EXIT STATUS ($?) for: samtools index $in_bam"
     fi
 done
 docker exec python_oneDNA2pileup bash -c "/python-scripts/get_bed_from_vcf.py $vcfs $output_file $bed_file"
@@ -45,8 +46,12 @@ log "doing depths"
 # shellcheck disable=SC2154
 docker exec samtools_oneDNA2pileup bash -c "samtools depth -Q $merge_vcf_w_coverage_MINQUAL\
                         -q $merge_vcf_w_coverage_MINBASEQ -b $bed_file $bams">"$depths_file"
+log "EXIT STATUS ($?) for: samtools depth -Q $merge_vcf_w_coverage_MINQUAL\
+                        -q $merge_vcf_w_coverage_MINBASEQ -b $bed_file $bams > $depths_file"      
 log "DONE depths"
 docker exec python_oneDNA2pileup bash -c "/python-scripts/add_depths.py $output_file $depths_file"
+log "EXIT STATUS ($?) for: /python-scripts/add_depths.py $output_file $depths_file"
+
 # shellcheck disable=SC2154
 if [ "$merge_vcf_w_coverage_DELETE_INPUT" == "true" ]; then
     rm "$bams" "$vcfs"
