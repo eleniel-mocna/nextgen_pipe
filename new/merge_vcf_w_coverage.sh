@@ -1,4 +1,5 @@
 #!/bin/bash
+# TODO: Add output file
 help(){
     echo "merge_vcf_w_coverage.sh: Create a bed file spanning all locations from the vcf.">&2
     echo "  INPUT:">&2

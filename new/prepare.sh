@@ -35,8 +35,6 @@ fi
 if [ "$this_is_just_a_test" -eq 1 ]; then
     echo "--test"
 fi
-realpath "$config_file"
-log  "OUT: $config_file"
 # log "${inputs[0]}"
 
 # shellcheck disable=SC2154
@@ -47,9 +45,9 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154
 for (( i=0; i<("$inputs_length")/3; i++ )); do
-    name=$(realpath "${inputs[((2*$i))]}")
-    reads1=$(realpath "${inputs[((2*$i+1))]}")
-    reads2=$(realpath "${inputs[((2*$i+2))]}")
+    name=$(realpath "${inputs[((3*$i))]}")
+    reads1=$(realpath "${inputs[((3*$i+1))]}")
+    reads2=$(realpath "${inputs[((3*$i+2))]}")
 
     reads1_new="$name/$(basename -- "$reads1")"
     reads2_new="$name/$(basename -- "$reads2")"
