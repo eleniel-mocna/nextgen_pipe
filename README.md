@@ -36,7 +36,7 @@ These accept only vector-like inputs.
    [1] "config" "1"      "A"      "2"      "B"      "3"      "C"
    ```
 
-For an example, see new/test_pipeline.R
+For an example, see scripts/test_pipeline.R
 
 ### Input via bash
 
@@ -90,7 +90,7 @@ and then paths/arguments for files for processing. Input can be given in these
 
 ### Creating a new script
 
-The easiest way to create a new script is by following instructions in new/template.sh.
+The easiest way to create a new script is by following instructions in scripts/template.sh.
 Edit the script according to the `#TODO` tags.
 
 ## TODO
