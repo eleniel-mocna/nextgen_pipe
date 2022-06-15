@@ -42,7 +42,6 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     
 done
 
-declare -a output_files
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
     out_folder="$(dirname "$(realpath "$vcf")")"
@@ -51,23 +50,12 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
         skip=$(grep -n -m 1 '#CHR' "$vcf" | cut -d: -f1)
         ((skip="$skip"+1))
 
-        tail -n +$skip "$vcf" | awk  'BEGIN  {FS="\t";OFS = "\t";ORS="\n"}  {print $1,$2,$4,$4}'   >> "$output_file"    
-        log "EXIT STATUS ($?) for: tail -n +$skip $vcf | awk  'BEGIN  {FS=\t;OFS = \t;ORS=\n}  {print $1,$2,$4,$4}'   >> $output_file"
+        tail -n +$skip "$vcf" | awk  'BEGIN  {FS="\t";OFS = "\t";ORS="\n"}  {print $1,$2,$4,$4}'   > "$output_file"    
+        log "EXIT STATUS ($?) for: tail -n +$skip $vcf | awk  'BEGIN  {FS=\t;OFS = \t;ORS=\n}  {print $1,$2,$4,$4}'   > $output_file"
+        
     fi
-    output_files[i]=$output_file    
+    echo "$output_file"
 done
-
-for varfile in "${output_files[@]}"; do
-    if [ "$is_done" == false ]; then  
-        mv "$varfile" "${varfile}_tmp"
-        sort -u "${varfile}_tmp">"$varfile"
-        log "EXIT STATUS ($?) for: sort -u ${varfile}_tmp > $varfile"
-        rm "${varfile}_tmp"
-    fi
-    echo "$varfile"
-    log "OUT: $varfile"
-done
-
 
 for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     vcf=$(realpath "${inputs[((N_ARGUMENTS*$i))]}")
@@ -77,7 +65,6 @@ for (( i=0; i<("$inputs_length")/"$N_ARGUMENTS"; i++ )); do
     if [ "$is_done" == false ] && [ "$remove_after_done" == true ]; then                     
         rm -f "$vcf"
     fi
-    output_files[i]=$output_file    
 done
 
 if [ "$is_done" == true ]; then

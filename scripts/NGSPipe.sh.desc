@@ -1,0 +1,2 @@
+sampleName:.*	fastq1:(.*\.fastq.*)|(.*\.fq.*)	fastq2:(.*\.fastq.*)|(.*\.fq.*)
+out:

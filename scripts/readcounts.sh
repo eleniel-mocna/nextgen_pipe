@@ -12,7 +12,7 @@ help(){
     echo "      - readcounts.txt">&2
 }
 # shellcheck source=/dev/null
-source "scripts/input_reader.sh"
+source "/scripts/input_reader.sh"
 N_ARGUMENTS=2
 # shellcheck disable=SC2154
 inputs_length="${#inputs[@]}"

@@ -37,6 +37,36 @@
 
 #new/mutect2.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
 
-#/scripts/prepare.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+#/scripts/prepare.sh# DONE: /scripts/last_run
 
-#/scripts/bwa_align.sh# DONE: /data/Samuel_workdir/nextgen_pipe/new/last_run
+#/scripts/bwa_align.sh# DONE: /scripts/last_run
+
+#scripts/prepare.sh# DONE: /scripts/last_run
+
+#/scripts/mark_duplicates.sh# DONE: /scripts/last_run
+
+#/scripts/sort_sam.sh# DONE: /scripts/last_run
+
+#/scripts/read_groups.sh# DONE: /scripts/last_run
+
+#/scripts/split_bam.sh# DONE: /scripts/last_run
+
+#/scripts/pileup.sh# DONE: /scripts/last_run
+
+#/scripts/merge_pileup.sh# DONE: /scripts/last_run
+
+#/scripts/call_variants.sh# DONE: /scripts/last_run
+
+#/scripts/merge_vcf.sh# DONE: /scripts/last_run
+
+#/scripts/filter_vcf.sh# DONE: /scripts/last_run
+
+#/scripts/create_varfile.sh# DONE: /scripts/last_run
+
+#/scripts/readcounts.sh# DONE: /scripts/last_run
+
+#/scripts/call_positions.sh# DONE: /scripts/last_run
+
+#/scripts/merge_vcf_w_coverage.sh# DONE: /scripts/last_run
+
+#/scripts/vep.sh# DONE: /scripts/last_run

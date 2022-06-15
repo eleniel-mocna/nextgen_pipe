@@ -76,7 +76,7 @@ create_varfile_OUT_FILENAME="varfile.txt"
 
 readcounts_memory="-Xmx5g" #In format `-Xmx[amount]` e.g `-Xmx5g`
 readcounts_min_coverage=0
-readcounts_min_base_qual=0
+readcounts_min_base_qual=15
 readcounts_DELETE_INPUT="false"
 readcounts_OUT_FILENAME="readcounts.txt"
 readcounts_THREADS=1

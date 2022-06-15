@@ -34,7 +34,16 @@ threads_folder="/mnt/storage/clip/Samuel_workdir/nextgen_pipe/scripts/multi_thre
 scripts_folder="/mnt/storage/clip/Samuel_workdir/nextgen_pipe/scripts"
 # /\ Folder, which contains available_threads with an integer in it, multi_threader.sh
 password=pass1234
-port=9009
+port=9058
+
+docker run --name PipeWebSamuel \
+    -d -it --cpus="$max_CPU" -m="$max_memory"  \
+    -v "$reference_directory":/reference \
+    -p "$port":8080 \
+    -v "$mount_directory":/data \
+    -v "$threads_folder":/multi_threader \
+    -v "$scripts_folder":/scripts \
+    -v /var/run/docker.sock:/var/run/docker.sock pipe_web 
 
 ########
 # MAIN #

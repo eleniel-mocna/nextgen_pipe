@@ -45,6 +45,8 @@ is_done=$(is_already_done "$0" "${inputs[@]}")
 
 # shellcheck disable=SC2154
 for (( i=0; i<("$inputs_length")/3; i++ )); do
+    mkdir -p "${inputs[((3*$i))]}"
+    log "EXIT STATUS ($?) for: mkdir -p ${inputs[((3*$i))]}"
     name=$(realpath "${inputs[((3*$i))]}")
     reads1=$(realpath "${inputs[((3*$i+1))]}")
     reads2=$(realpath "${inputs[((3*$i+2))]}")
@@ -53,7 +55,6 @@ for (( i=0; i<("$inputs_length")/3; i++ )); do
     reads2_new="$name/$(basename -- "$reads2")"
     # shellcheck disable=SC2154 
     if [ "$is_done" == false ]; then    
-        mkdir -p "$name"
         ln -f "$reads1" "$reads1_new"
         log "EXIT STATUS ($?) for: ln -f $reads1 $reads1_new"
         ln -f "$reads2" "$reads2_new"    
